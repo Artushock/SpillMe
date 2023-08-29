@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.navigation
+package com.artushock.apps.spillme.ui.mainlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,51 +28,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.artushock.apps.spillme.Plant
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.dev.PlantsProvider
 import com.artushock.apps.spillme.ui.theme.MainBeige
 import com.artushock.apps.spillme.ui.theme.MainBrown
-import com.artushock.apps.spillme.ui.theme.MainGreen
-
-@Composable
-fun AppNavigation() {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = "mainListScreen") {
-        composable("mainListScreen") { MainListScreen(navController) }
-    }
-}
 
 @Composable
 fun MainListScreen(navController: NavHostController) {
     val plants = PlantsProvider().getPlants()
 
     Box {
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(
                 items = plants,
                 itemContent = { PlantItem(plant = it) }
             )
-        }
-        FloatingActionButton(
-            onClick = { },
-            shape = CircleShape,
-            containerColor = MainGreen,
-            modifier = Modifier
-                .padding(48.dp)
-                .align(Alignment.BottomEnd),
-        ) {
-            Image(painter = painterResource(id = R.drawable.ic_plus_24), contentDescription = null)
         }
     }
 }
