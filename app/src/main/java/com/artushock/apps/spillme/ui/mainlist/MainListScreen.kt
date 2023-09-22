@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.artushock.apps.spillme.Plant
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.dev.PlantsProvider
 import com.artushock.apps.spillme.ui.theme.MainBeige
