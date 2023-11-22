@@ -47,6 +47,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
+import com.artushock.apps.spillme.ui.models.PlantLocation
+import com.artushock.apps.spillme.ui.models.PlantModel
+import com.artushock.apps.spillme.ui.models.PlantType
 import com.artushock.apps.spillme.ui.theme.MainBrown
 import com.artushock.apps.spillme.ui.theme.MainGreen
 import org.joda.time.DateTime
@@ -67,14 +70,10 @@ fun AddNewPlant(
         mutableLongStateOf(dateTime.millis)
     }
 
-    val plantTypeOptions = listOf(
-        "Plant type #1", "Plant type #2", "Plant type #3", "Plant type #4", "Plant type #5"
-    )
+    val plantTypeOptions = getPlantTypes()
     var selectedPlantType by remember { mutableStateOf(plantTypeOptions[0]) }
 
-    val locationOptions = listOf(
-        "Location #1", "Location #2", "Location #3", "Location #4", "Location #5"
-    )
+    val locationOptions = getPlantLocations()
     var selectedLocation by remember { mutableStateOf(locationOptions[0]) }
 
 
@@ -127,7 +126,16 @@ fun AddNewPlant(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp), onClick = {
-                viewModel.addPlant(txtPlantName, txtPlantDescription)
+                viewModel.addPlant(
+                    PlantModel(
+                        id = 0,
+                        name = txtPlantName,
+                        description = txtPlantDescription,
+                        plantDate = DateTime(selectedDate),
+                        plantType = selectedPlantType,
+                        location = selectedLocation,
+                    )
+                )
             }, colors = getButtonColors()
         ) {
             Text(text = "ADD")
@@ -136,6 +144,47 @@ fun AddNewPlant(
 
 
 }
+
+fun getPlantLocations(): List<PlantLocation> = listOf(
+    PlantLocation(
+        id = 1,
+        name = "Location #1",
+        description = "Description of Location #1",
+    ),
+    PlantLocation(
+        id = 2,
+        name = "Location #2",
+        description = "Description of Location #2",
+    ),
+    PlantLocation(
+        id = 3,
+        name = "Location #3",
+        description = "Description of Location #3",
+    )
+)
+
+
+fun getPlantTypes(): List<PlantType> = listOf(
+    PlantType(
+        id = 1,
+        name = "Plant #1",
+        type = 1,
+        description = "Description of Plant #1",
+    ),
+    PlantType(
+        id = 2,
+        name = "Plant #2",
+        type = 1,
+        description = "Description of Plant #2",
+    ),
+    PlantType(
+        id = 3,
+        name = "Plant #3",
+        type = 1,
+        description = "Description of Plant #3",
+    )
+)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
