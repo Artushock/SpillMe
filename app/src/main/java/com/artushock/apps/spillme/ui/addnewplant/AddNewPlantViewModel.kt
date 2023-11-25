@@ -14,6 +14,6 @@ class AddNewPlantViewModel @Inject constructor(
     private val plantRepository: PlantRepository
 ): ViewModel() {
     fun addPlant(plantModel: PlantModel) = viewModelScope.launch {
-        plantRepository.addPlant(PlantEntity(plantModel))
+       plantRepository.addPlant(PlantEntity(plantModel))
     }
 }

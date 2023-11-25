@@ -135,7 +135,9 @@ fun AddNewPlant(
                         plantType = selectedPlantType,
                         location = selectedLocation,
                     )
-                )
+                ).invokeOnCompletion {
+                    navController.navigateUp()
+                }
             }, colors = getButtonColors()
         ) {
             Text(text = "ADD")
