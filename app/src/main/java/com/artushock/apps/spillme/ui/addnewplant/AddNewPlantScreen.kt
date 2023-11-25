@@ -14,7 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DropdownMenu
@@ -47,11 +47,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
+import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.models.PlantLocation
 import com.artushock.apps.spillme.ui.models.PlantModel
 import com.artushock.apps.spillme.ui.models.PlantType
 import com.artushock.apps.spillme.ui.theme.MainBrown
-import com.artushock.apps.spillme.ui.theme.MainGreen
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -136,11 +136,14 @@ fun AddNewPlant(
                         location = selectedLocation,
                     )
                 ).invokeOnCompletion {
+                    Toast.makeText(context, "Added new plant $txtPlantName", Toast.LENGTH_SHORT)
+                        .show()
                     navController.navigateUp()
                 }
             }, colors = getButtonColors()
         ) {
-            Text(text = "ADD")
+            IconPlus(20)
+            Text(text = "ADD", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
         }
     }
 
@@ -322,11 +325,12 @@ fun EditTextField(labelText: String, value: String, onValueChanged: ((String) ->
     )
 }
 
-fun getButtonColors() = ButtonColors(
-    containerColor = MainGreen,
-    contentColor = Color.White,
-    disabledContainerColor = MainGreen,
-    disabledContentColor = Color.White,
+@Composable
+fun getButtonColors() = ButtonDefaults.buttonColors(
+    containerColor = MaterialTheme.colorScheme.secondary,
+    contentColor = MaterialTheme.colorScheme.background,
+    disabledContainerColor = MaterialTheme.colorScheme.secondary,
+    disabledContentColor = MaterialTheme.colorScheme.background,
 )
 
 @Composable
