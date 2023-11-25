@@ -3,6 +3,7 @@ package com.artushock.apps.spillme.ui.mainlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artushock.apps.spillme.repositories.PlantRepository
+import com.artushock.apps.spillme.ui.mainlist.models.MainListPlantModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

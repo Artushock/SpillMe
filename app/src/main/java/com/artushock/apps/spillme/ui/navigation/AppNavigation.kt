@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.artushock.apps.spillme.ui.addnewplant.AddNewPlant
+import com.artushock.apps.spillme.ui.addnewplant.addplanttype.AddNewPlantTypeScreen
 import com.artushock.apps.spillme.ui.base.AppBarPage
 import com.artushock.apps.spillme.ui.mainlist.MainListScreen
 
@@ -22,6 +23,11 @@ fun AppNavigation() {
         composable("addNewPlant") {
             AppBarPage(title = "Add new plant", navController = navController) {
                 AddNewPlant(navController = navController)
+            }
+        }
+        composable("addNewPlantType") {
+            AppBarPage(title = "Add plant type", navController = navController) {
+                AddNewPlantTypeScreen(navController = navController)
             }
         }
     }

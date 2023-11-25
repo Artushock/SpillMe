@@ -14,17 +14,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -47,10 +46,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
-import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.repositories.models.PlantLocation
 import com.artushock.apps.spillme.repositories.models.PlantModel
 import com.artushock.apps.spillme.repositories.models.PlantType
+import com.artushock.apps.spillme.ui.base.IconPlus
+import com.artushock.apps.spillme.ui.base.colors.getButtonColors
+import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors
+import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.theme.MainBrown
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -80,14 +82,12 @@ fun AddNewPlant(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Red)
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.TopCenter)
-                .background(color = Color.White)
         ) {
 
             Image(painter = painterResource(id = R.drawable.add_photo_128),
@@ -113,11 +113,11 @@ fun AddNewPlant(
                 selectedDate = it
             }
 
-            DropDownEditText("Plant type", plantTypeOptions, selectedPlantType) {
+            DropDownEditText(navController, "Plant type", plantTypeOptions, selectedPlantType) {
                 selectedPlantType = it
             }
 
-            DropDownEditText("Location", locationOptions, selectedLocation) {
+            DropDownEditText(navController, "Location", locationOptions, selectedLocation) {
                 selectedLocation = it
             }
         }
@@ -243,13 +243,14 @@ private fun DatePickerEditView(selectedDate: Long, onPlantingDateChanged: (Long)
             .onFocusChanged {
                 showDatePickerDialog = it.hasFocus
             },
-        colors = textFieldColors(),
+        colors = getTextFieldColors(),
         textStyle = LocalTextStyle.current.copy(fontSize = 18.sp)
     )
 }
 
 @Composable
 fun <T> DropDownEditText(
+    navController: NavHostController,
     labelText: String,
     options: List<T>,
     selectedItem: T,
@@ -282,14 +283,16 @@ fun <T> DropDownEditText(
                         tint = MainBrown,
                         modifier = Modifier.clickable { expanded = !expanded })
                 },
-                colors = textFieldColors(),
+                colors = getTextFieldColors(),
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp)
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_add_button_48),
-                contentDescription = null
-            )
+            IconButton(onClick = { navController.navigate("addNewPlantType") }) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_add_button_48),
+                    contentDescription = null
+                )
+            }
         }
 
         DropdownMenu(expanded = expanded,
@@ -310,51 +313,3 @@ fun <T> DropDownEditText(
             })
     }
 }
-
-@Composable
-fun EditTextField(labelText: String, value: String, onValueChanged: ((String) -> Unit)?) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = { onValueChanged?.let { lambda -> lambda(it) } },
-        label = { Text(text = labelText) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        colors = textFieldColors(),
-        textStyle = LocalTextStyle.current.copy(fontSize = 18.sp)
-    )
-}
-
-@Composable
-fun getButtonColors() = ButtonDefaults.buttonColors(
-    containerColor = MaterialTheme.colorScheme.secondary,
-    contentColor = MaterialTheme.colorScheme.background,
-    disabledContainerColor = MaterialTheme.colorScheme.secondary,
-    disabledContentColor = MaterialTheme.colorScheme.background,
-)
-
-@Composable
-private fun textFieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedTextColor = MaterialTheme.colorScheme.secondary,
-    focusedBorderColor = MaterialTheme.colorScheme.secondary,
-    focusedLeadingIconColor = MaterialTheme.colorScheme.secondary,
-    focusedTrailingIconColor = MaterialTheme.colorScheme.secondary,
-    focusedLabelColor = MaterialTheme.colorScheme.secondary,
-    focusedPlaceholderColor = MaterialTheme.colorScheme.secondary,
-    focusedSupportingTextColor = MaterialTheme.colorScheme.secondary,
-    focusedPrefixColor = MaterialTheme.colorScheme.secondary,
-    focusedSuffixColor = MaterialTheme.colorScheme.secondary,
-)
-//
-//@Composable
-//@OptIn(ExperimentalMaterial3Api::class)
-//private fun datePickerDialogColors() = DatePickerDefaults.colors(
-//    containerColor = Color.White,
-//    titleContentColor = MainBrown,
-//    headlineContentColor = MainBrown,
-//    weekdayContentColor = MainBrown,
-//    subheadContentColor = MainBrown,
-//    navigationContentColor = MainBrown,
-//            yearContentColor = MainBrown,
-//    dateTextFieldColors = OutlinedTextFieldDefaults.colors()
-//)

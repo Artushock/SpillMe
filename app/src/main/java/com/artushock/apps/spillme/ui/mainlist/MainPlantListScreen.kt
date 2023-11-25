@@ -33,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.artushock.apps.spillme.R
+import com.artushock.apps.spillme.ui.mainlist.models.MainListPlantModel
 import com.artushock.apps.spillme.ui.theme.MainBeige
 import com.artushock.apps.spillme.ui.theme.MainBrown
 
