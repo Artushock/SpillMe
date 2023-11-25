@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,16 +29,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.artushock.apps.spillme.R
-import com.artushock.apps.spillme.dev.PlantsProvider
+import com.artushock.apps.spillme.ui.models.PlantModel
 import com.artushock.apps.spillme.ui.theme.MainBeige
 import com.artushock.apps.spillme.ui.theme.MainBrown
 
 @Composable
-fun MainListScreen(navController: NavHostController) {
-    val plants = PlantsProvider().getPlants()
+fun MainListScreen(
+    navController: NavHostController,
+    viewModel: MainPlantListViewModel = hiltViewModel(),
+) {
+    val plants by viewModel.plants.collectAsState()
 
     Box {
 
@@ -55,7 +61,7 @@ fun MainListScreen(navController: NavHostController) {
 }
 
 @Composable
-fun PlantItem(plant: Plant) {
+fun PlantItem(plant: PlantModel) {
     Column(
         Modifier
             .shadow(3.dp, shape = RoundedCornerShape(8.dp))

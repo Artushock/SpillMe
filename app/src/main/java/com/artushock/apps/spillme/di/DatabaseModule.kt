@@ -2,7 +2,6 @@ package com.artushock.apps.spillme.di
 
 import android.content.Context
 import androidx.room.Room
-import com.artushock.apps.spillme.db.dao.PlantDao
 import com.artushock.apps.spillme.db.db.SpillMeDatabase
 import dagger.Module
 import dagger.Provides
@@ -16,9 +15,22 @@ import javax.inject.Singleton
 class DatabaseModule {
 
     @Provides
-    fun providePlantsDao(database: SpillMeDatabase): PlantDao {
-        return database.plantDao()
-    }
+    fun providePlantsDao(database: SpillMeDatabase) = database.plantDao()
+
+    @Provides
+    fun providePlantsTypeDao(database: SpillMeDatabase) = database.plantTypeDao()
+
+    @Provides
+    fun provideFertilizerDao(database: SpillMeDatabase) = database.fertilizerDao()
+
+    @Provides
+    fun provideFertilizerCareJoinDao(database: SpillMeDatabase) = database.fertilizerCareJoinDao()
+
+    @Provides
+    fun provideConditionsDao(database: SpillMeDatabase) = database.conditionsDao()
+
+    @Provides
+    fun provideCareFrequencyDao(database: SpillMeDatabase) = database.careFrequencyDao()
 
     @Provides
     @Singleton
