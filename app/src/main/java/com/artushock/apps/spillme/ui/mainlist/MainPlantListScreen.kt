@@ -33,7 +33,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.artushock.apps.spillme.R
-import com.artushock.apps.spillme.ui.models.PlantModel
 import com.artushock.apps.spillme.ui.theme.MainBeige
 import com.artushock.apps.spillme.ui.theme.MainBrown
 
@@ -61,7 +60,7 @@ fun MainListScreen(
 }
 
 @Composable
-fun PlantItem(plant: PlantModel) {
+fun PlantItem(plant: MainListPlantModel) {
     Column(
         Modifier
             .shadow(3.dp, shape = RoundedCornerShape(8.dp))
@@ -109,7 +108,7 @@ fun PlantItem(plant: PlantModel) {
                     contentDescription = null
                 )
                 Text(
-                    text = "12 days",
+                    text = "${plant.nextWatering}  days",
                     modifier = Modifier
                         .padding(8.dp),
                     style = TextStyle(color = MainBrown, fontSize = 11.sp),
@@ -122,7 +121,7 @@ fun PlantItem(plant: PlantModel) {
                     contentDescription = null
                 )
                 Text(
-                    text = "12 days",
+                    text = "${plant.nextFeeding} days",
                     modifier = Modifier
                         .padding(8.dp),
                     style = TextStyle(color = MainBrown, fontSize = 11.sp),
@@ -135,7 +134,7 @@ fun PlantItem(plant: PlantModel) {
                     contentDescription = null
                 )
                 Text(
-                    text = "12 days",
+                    text = "${plant.nextSpraying}  days",
                     modifier = Modifier
                         .padding(8.dp),
                     style = TextStyle(color = MainBrown, fontSize = 11.sp),

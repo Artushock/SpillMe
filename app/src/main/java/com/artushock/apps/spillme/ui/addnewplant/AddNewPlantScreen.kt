@@ -48,9 +48,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.ui.base.IconPlus
-import com.artushock.apps.spillme.ui.models.PlantLocation
-import com.artushock.apps.spillme.ui.models.PlantModel
-import com.artushock.apps.spillme.ui.models.PlantType
+import com.artushock.apps.spillme.repositories.models.PlantLocation
+import com.artushock.apps.spillme.repositories.models.PlantModel
+import com.artushock.apps.spillme.repositories.models.PlantType
 import com.artushock.apps.spillme.ui.theme.MainBrown
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat

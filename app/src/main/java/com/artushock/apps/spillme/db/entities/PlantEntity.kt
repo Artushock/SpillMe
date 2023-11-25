@@ -2,7 +2,7 @@ package com.artushock.apps.spillme.db.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.artushock.apps.spillme.ui.models.PlantModel
+import com.artushock.apps.spillme.repositories.models.PlantModel
 
 @Entity(tableName = "plants")
 data class PlantEntity(

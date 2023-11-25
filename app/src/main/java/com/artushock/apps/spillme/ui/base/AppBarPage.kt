@@ -61,14 +61,14 @@ fun AppBarPage(
         },
         content = { padding ->
             Box(
-                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .padding(padding)
                     .fillMaxSize()
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.logo_spill_me),
-                    contentDescription = "Logo SpillMe"
+                    contentDescription = "Logo SpillMe",
+                    modifier = Modifier.align(Alignment.Center)
                 )
                 content()
             }

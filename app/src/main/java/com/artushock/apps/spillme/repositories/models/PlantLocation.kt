@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.models
+package com.artushock.apps.spillme.repositories.models
 
 data class PlantLocation(
     val id: Int,
