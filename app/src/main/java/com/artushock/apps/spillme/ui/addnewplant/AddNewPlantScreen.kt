@@ -58,7 +58,7 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
 @Composable
-fun AddNewPlant(
+fun AddNewPlantScreen(
     navController: NavHostController,
     viewModel: AddNewPlantViewModel = hiltViewModel(),
 ) {

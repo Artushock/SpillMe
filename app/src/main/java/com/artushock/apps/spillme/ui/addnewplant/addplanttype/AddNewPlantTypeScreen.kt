@@ -49,7 +49,7 @@ fun AddNewPlantTypeScreen(
         Button(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp), onClick = { /*todo*/ }, colors = getButtonColors()
+                .padding(16.dp), onClick = { navController.navigate("frequencyOfCare") }, colors = getButtonColors()
         ) {
             Text(text = "NEXT", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
         }
