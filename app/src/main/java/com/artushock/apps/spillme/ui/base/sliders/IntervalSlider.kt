@@ -26,19 +26,25 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun IntervalSlider(
+    isCheckboxVisible: Boolean = true,
     name: String = "",
     units: String = "days",
     minValue: Int = 0,
     maxValue: Int = 10,
     defaultValue: Int = 0,
-    valueChangeListener: (Int) -> Unit,
+    valueChangeListener: (Int?) -> Unit,
 ) {
     var checkBoxState by remember { mutableStateOf(true) }
     var sliderPosition by remember { mutableFloatStateOf(defaultValue.toFloat()) }
 
     Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-        Checkbox(checked = checkBoxState, onCheckedChange = { checkBoxState = it })
-        Spacer(modifier = Modifier.width(16.dp))
+        if (isCheckboxVisible){
+            Checkbox(checked = checkBoxState, onCheckedChange = {
+                checkBoxState = it
+                if (!it) valueChangeListener(null)
+            })
+            Spacer(modifier = Modifier.width(16.dp))
+        }
         Column {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
