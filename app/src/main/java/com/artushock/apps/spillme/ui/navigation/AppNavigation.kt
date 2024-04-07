@@ -1,9 +1,12 @@
 package com.artushock.apps.spillme.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavArgument
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.artushock.apps.spillme.ui.addnewplant.AddNewPlantScreen
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.AddNewPlantTypeScreen
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.FrequencyOfCareScreen
@@ -26,12 +29,28 @@ fun AppNavigation() {
                 AddNewPlantScreen(navController = navController)
             }
         }
-        composable("addNewPlantType") {
+        composable(
+            route = "addNewPlantType",
+
+        ) {  navBackStackEntry ->
             AppBarPage(title = "Add plant type", navController = navController) {
-                AddNewPlantTypeScreen(navController = navController)
+                val name: String = navBackStackEntry.arguments?.getString("plant_type_name") ?: "No name"
+                val description: String = navBackStackEntry.arguments?.getString("plantType_description") ?: "No description"
+                AddNewPlantTypeScreen(
+                    name = name,
+                    description = description,
+                    navController = navController)
             }
         }
-        composable("frequencyOfCare") {
+        composable("frequencyOfCare",
+                arguments = listOf(
+                navArgument("plant_type_name"){
+                    NavType.StringType
+                },
+            navArgument("plantType_description"){
+                NavType.StringType
+            }
+        )) {
             AppBarPage(title = "Frequency of care", navController = navController) {
                 FrequencyOfCareScreen(navController = navController)
             }

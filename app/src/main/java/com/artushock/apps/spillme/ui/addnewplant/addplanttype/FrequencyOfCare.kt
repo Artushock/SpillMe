@@ -75,6 +75,8 @@ fun FrequencyOfCareScreen(
                 .align(Alignment.TopCenter)
                 .verticalScroll(rememberScrollState())
         ) {
+            Text(text = state.name)
+            Text(text = state.description)
             IntervalSlider(
                 name = "Watering",
                 units = "days",

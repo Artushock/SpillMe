@@ -1,8 +1,8 @@
 package com.artushock.apps.spillme.ui.addnewplant.addplanttype.model
 
 data class NewPlantType(
-    val name: String? = null,
-    val description: String? = null,
+    val name: String,
+    val description: String,
     val wateringFrequency: Int = 3,
     val sprayingFrequency: Int = 12,
     val rubbingFrequency: Int = 1,
