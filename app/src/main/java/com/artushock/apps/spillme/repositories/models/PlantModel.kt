@@ -10,7 +10,7 @@ data class PlantModel(
     val plantDate: DateTime,
     val plantType: PlantType?,
     val location: PlantLocation?,
-    val photo: String = "",
+    val photo: String? = null,
 ) {
     constructor(plantEntity: PlantEntity) : this(
         id = plantEntity.id,
@@ -19,7 +19,7 @@ data class PlantModel(
         plantDate = DateTime(plantEntity.plantDate),
         plantType = null,
         location = null,
-        photo = "https://momcrieff.com/wp-content/uploads/2023/01/My-Front-door-planter-3.jpg", //todo
+        photo = plantEntity.photoUri,
     )
 }
 

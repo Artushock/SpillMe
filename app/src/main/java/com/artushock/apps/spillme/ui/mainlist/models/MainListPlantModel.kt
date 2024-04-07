@@ -5,5 +5,5 @@ data class MainListPlantModel(
     val nextWatering: Int,
     val nextFeeding: Int,
     val nextSpraying: Int,
-    val photo: String,
+    val photo: String?,
 )
