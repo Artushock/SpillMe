@@ -46,9 +46,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
-import com.artushock.apps.spillme.repositories.models.PlantLocation
-import com.artushock.apps.spillme.repositories.models.PlantModel
-import com.artushock.apps.spillme.repositories.models.PlantType
+import com.artushock.apps.spillme.repositories.models.plants.PlantLocation
+import com.artushock.apps.spillme.repositories.models.plants.PlantModel
+import com.artushock.apps.spillme.repositories.models.plants.PlantType
 import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors

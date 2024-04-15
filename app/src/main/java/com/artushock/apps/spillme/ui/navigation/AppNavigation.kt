@@ -21,7 +21,7 @@ fun AppNavigation() {
 
         composable("authScreen")
         {
-            AuthScreen()
+            AuthScreen(navController)
         }
 
         composable("mainListScreen")

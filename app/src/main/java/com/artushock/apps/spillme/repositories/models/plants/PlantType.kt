@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.repositories.models
+package com.artushock.apps.spillme.repositories.models.plants
 
 data class PlantType(
     val id: Int,

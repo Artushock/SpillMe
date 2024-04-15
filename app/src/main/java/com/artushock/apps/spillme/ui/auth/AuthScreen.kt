@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -19,19 +20,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
+import com.artushock.apps.spillme.ui.model.ViewState
 
-@Preview
 @Composable
-fun AuthScreen() {
+fun AuthScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = hiltViewModel()
+) {
 
     var txtLogin by rememberSaveable { mutableStateOf("") }
     var txtPassword by rememberSaveable { mutableStateOf("") }
+
+    val uiState by viewModel.authResultState.collectAsState()
+
+    if (uiState is ViewState.Success && (uiState as ViewState.Success<String>).result.isNotEmpty()) navController.navigate(
+        "mainListScreen"
+    )
 
     Column(
         modifier = Modifier
@@ -58,12 +69,35 @@ fun AuthScreen() {
 
         Button(
             modifier = Modifier
-                .padding(16.dp)
+                .fillMaxWidth()
+                .padding(20.dp)
                 .align(Alignment.CenterHorizontally),
-            onClick = { },
+            onClick = {
+                viewModel.signIn(txtLogin, txtPassword)
+            },
             colors = getButtonColors()
         ) {
-            Text(text = "LOGIN", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
+            when (uiState) {
+                is ViewState.Error -> Text(
+                    text = "ERROR",
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(8.dp)
+                )
+
+                ViewState.Loading -> Text(
+                    text = "PROGRESS..",
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(8.dp)
+                )
+
+                is ViewState.Success -> {
+                    Text(
+                        text = "LOGIN",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
         }
         Text(
             text = "Forget password",
