@@ -7,12 +7,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class PlantRepository @Inject constructor(
+class PlantRepositoryImpl @Inject constructor(
     private val plantDao: PlantDao,
-) {
+) : PlantRepository {
 
-    fun getAllPlants(): Flow<List<PlantModel>> = plantDao.selectAll()
+    override fun getAllPlants(): Flow<List<PlantModel>> = plantDao.selectAll()
         .map { entities -> entities.map { PlantModel(it) } }
 
-    suspend fun addPlant(plantEntity: PlantEntity) = plantDao.insertReplace(plantEntity)
+    override suspend fun addPlant(plant: PlantModel) = plantDao.insertReplace(PlantEntity(plant))
+
 }

@@ -68,7 +68,7 @@ fun AddNewPlantScreen(
     var txtPlantDescription by rememberSaveable { mutableStateOf("") }
 
     val dateTime = DateTime.now()
-    var selectedDate by remember {
+    var selectedDate by rememberSaveable {
         mutableLongStateOf(dateTime.millis)
     }
 
