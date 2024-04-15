@@ -9,4 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface PlantDao : BaseDao<PlantEntity> {
     @Query("select *  from `plants`")
     fun selectAll(): Flow<List<PlantEntity>>
+
+    @Query("delete from `plants` where id=:plantId")
+    suspend fun deleteById(plantId: Int)
 }
