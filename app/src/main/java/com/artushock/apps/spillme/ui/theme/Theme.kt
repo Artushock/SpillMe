@@ -38,6 +38,8 @@ private val LightColorScheme = lightColorScheme(
     outline = MainBrown,
     outlineVariant = MainBeige,
     secondaryContainer = MainBeige,
+    onTertiary = Color.White,
+    tertiaryContainer = MainDisabledGreen,
 )
 
 @Composable
@@ -49,7 +51,9 @@ fun SpillMeTheme(
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            if (darkTheme) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(LocalContext.current)
+            if (darkTheme) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(
+                LocalContext.current
+            )
         }
 
         darkTheme -> DarkColorScheme

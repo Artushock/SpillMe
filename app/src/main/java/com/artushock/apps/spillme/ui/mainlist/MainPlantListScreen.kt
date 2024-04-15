@@ -43,12 +43,11 @@ import com.artushock.apps.spillme.ui.theme.MainBrown
 @Composable
 fun MainListScreen(
     navController: NavHostController,
-    viewModel: MainPlantListViewModel = hiltViewModel(),
 ) {
+    val viewModel: MainPlantListViewModel = hiltViewModel()
     val plants by viewModel.plants.collectAsState()
 
     Box {
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(16.dp),

@@ -1,7 +1,8 @@
 package com.artushock.apps.spillme.ui.addnewplant.models
 
-import com.artushock.apps.spillme.repositories.models.PlantLocation
-import com.artushock.apps.spillme.repositories.models.PlantType
+
+import com.artushock.apps.spillme.repositories.models.plants.PlantLocation
+import com.artushock.apps.spillme.repositories.models.plants.PlantType
 import org.joda.time.DateTime
 
 data class PlantUIModel(

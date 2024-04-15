@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.repositories.models
+package com.artushock.apps.spillme.repositories.models.plants
 
 import com.artushock.apps.spillme.db.entities.PlantTypeEntity
 

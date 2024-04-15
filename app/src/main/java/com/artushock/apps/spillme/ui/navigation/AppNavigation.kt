@@ -13,17 +13,20 @@ import com.artushock.apps.spillme.ui.mainlist.MainListScreen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-
     NavHost(navController = navController, startDestination = "authScreen") {
 
         composable("authScreen")
         {
-            AuthScreen()
+            AuthScreen(navController)
         }
 
         composable("mainListScreen")
         {
-            AppBarPage(title = "Plants", navController = navController, actions = true) {
+            AppBarPage(
+                title = "Plants",
+                navController = navController,
+                navBackEnabled = false,
+                plusAction = { navController.navigate("addNewPlant") }) {
                 MainListScreen(navController = navController)
             }
         }

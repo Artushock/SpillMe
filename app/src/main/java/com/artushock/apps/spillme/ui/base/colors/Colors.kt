@@ -25,6 +25,6 @@ fun getTextFieldColors() = OutlinedTextFieldDefaults.colors(
 fun getButtonColors(): ButtonColors = ButtonDefaults.buttonColors(
     containerColor = MaterialTheme.colorScheme.secondary,
     contentColor = MaterialTheme.colorScheme.background,
-    disabledContainerColor = MaterialTheme.colorScheme.secondary,
+    disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
     disabledContentColor = MaterialTheme.colorScheme.background,
 )

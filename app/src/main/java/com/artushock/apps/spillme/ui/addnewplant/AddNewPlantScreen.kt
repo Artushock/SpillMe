@@ -59,8 +59,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.artushock.apps.spillme.R
-import com.artushock.apps.spillme.repositories.models.PlantLocation
-import com.artushock.apps.spillme.repositories.models.PlantType
+import com.artushock.apps.spillme.repositories.models.plants.PlantLocation
+import com.artushock.apps.spillme.repositories.models.plants.PlantType
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.Progress
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.UiState
 import com.artushock.apps.spillme.ui.addnewplant.models.PlantUIModel
@@ -280,7 +280,7 @@ private fun AddNewPlantScreenSuccess(
         labelText = "Plant type",
         options = uiState.plantTypeList,
         selectedItem = uiState.selectedPlantType,
-        onChangeSelectionOption = { plantType ->
+        onChangeSelectionOption = { plantType: PlantType ->
             uiState = uiState.copy(selectedPlantType = plantType)
             onPlantTypeChanged(plantType)
         },
@@ -291,7 +291,7 @@ private fun AddNewPlantScreenSuccess(
         labelText = "Location",
         options = uiState.locationList,
         selectedItem = uiState.selectedLocation,
-        onChangeSelectionOption = { location ->
+        onChangeSelectionOption = { location: PlantLocation ->
             uiState = uiState.copy(selectedLocation = location)
             onPlantLocationChanged(location)
         },
