@@ -40,9 +40,9 @@ fun AuthScreen(
 
     val uiState by viewModel.authResultState.collectAsState()
 
-    if (uiState is ViewState.Success && (uiState as ViewState.Success<String>).result.isNotEmpty()) navController.navigate(
-        "mainListScreen"
-    )
+    if (uiState is ViewState.Success && (uiState as ViewState.Success<String>).result.isNotEmpty()) {
+        navController.navigate("mainListScreen")
+    }
 
     Column(
         modifier = Modifier
