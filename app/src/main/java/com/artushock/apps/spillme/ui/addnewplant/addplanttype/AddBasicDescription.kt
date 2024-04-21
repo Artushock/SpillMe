@@ -9,34 +9,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.AddTypeScreenState
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
-
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 
 @Composable
-fun AddNewPlantTypeScreen(
-    name: String,
-    description: String,
-    navController: NavHostController,
-    viewModel: AddNewPlantTypeViewModel = hiltViewModel(),
+fun AddBasicDescription(
+    state: AddTypeScreenState,
+    onStateModified: (AddTypeScreenState) -> Unit,
+    onNext: () -> Unit
 ) {
     val context = LocalContext.current
-    var txtPlantName by remember { mutableStateOf("") }
-    var txtPlantDescription by remember { mutableStateOf("") }
-    val state by viewModel.state.collectAsState()
 
     Box(
         modifier = Modifier
@@ -50,13 +38,13 @@ fun AddNewPlantTypeScreen(
             EditTextField(
                 labelText = "Name",
                 value = state.name,
-                onValueChanged = (viewModel::changedName)
+                onValueChanged = { onStateModified(state.copy(name = it)) }
             )
 
             EditTextField(
                 labelText = "Description",
                 value = state.description,
-                onValueChanged = (viewModel::changedDescription)
+                onValueChanged = { onStateModified(state.copy(description = it)) }
             )
         }
 
@@ -71,7 +59,7 @@ fun AddNewPlantTypeScreen(
                         .show()
                     return@Button
                 }
-                navController.navigate("frequencyOfCare")
+                onNext()
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)

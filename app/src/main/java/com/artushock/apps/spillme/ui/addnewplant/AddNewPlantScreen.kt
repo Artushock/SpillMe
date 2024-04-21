@@ -53,6 +53,7 @@ import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
+import com.artushock.apps.spillme.ui.navigation.NAV_ADD_NEW_PLANT_TYPE
 import com.artushock.apps.spillme.ui.theme.MainBrown
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -287,7 +288,7 @@ fun <T> DropDownEditText(
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp)
             )
 
-            IconButton(onClick = { navController.navigate("addNewPlantType") }) {
+            IconButton(onClick = { navController.navigate(NAV_ADD_NEW_PLANT_TYPE) }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_add_button_48),
                     contentDescription = null

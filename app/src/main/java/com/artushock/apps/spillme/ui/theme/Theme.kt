@@ -26,6 +26,8 @@ private val DarkColorScheme = darkColorScheme(
     outline = MainBrown,
     outlineVariant = MainBeige,
     secondaryContainer = MainBeige,
+    surface = Color.White,
+    onPrimary = Color.White,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -38,6 +40,8 @@ private val LightColorScheme = lightColorScheme(
     outline = MainBrown,
     outlineVariant = MainBeige,
     secondaryContainer = MainBeige,
+    surface = Color.White,
+    onPrimary = Color.White,
 )
 
 @Composable

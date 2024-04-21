@@ -28,6 +28,7 @@ import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.model.ViewState
+import com.artushock.apps.spillme.ui.navigation.NAV_MAIN_LIST
 
 @Composable
 fun AuthScreen(
@@ -41,7 +42,7 @@ fun AuthScreen(
     val uiState by viewModel.authResultState.collectAsState()
 
     if (uiState is ViewState.Success && (uiState as ViewState.Success<String>).result.isNotEmpty()) {
-        navController.navigate("mainListScreen")
+        navController.navigate(NAV_MAIN_LIST)
     }
 
     Column(
