@@ -174,20 +174,23 @@ fun getPlantTypes(): List<PlantType> = listOf(
     PlantType(
         id = 1,
         name = "Plant #1",
-        type = 1,
         description = "Description of Plant #1",
+        careId = null,
+        conditionsId = null,
     ),
     PlantType(
         id = 2,
         name = "Plant #2",
-        type = 1,
         description = "Description of Plant #2",
+        careId = null,
+        conditionsId = null,
     ),
     PlantType(
         id = 3,
         name = "Plant #3",
-        type = 1,
         description = "Description of Plant #3",
+        careId = null,
+        conditionsId = null,
     )
 )
 

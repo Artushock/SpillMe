@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.Fertilizer
+import com.artushock.apps.spillme.repositories.models.plants.Fertilizer
 import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.base.sliders.IntervalSlider

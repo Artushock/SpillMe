@@ -1,6 +1,6 @@
 package com.artushock.apps.spillme.repositories.models.plants
 
-import com.artushock.apps.spillme.db.entities.PlantEntity
+import com.artushock.database.entities.PlantEntity
 import org.joda.time.DateTime
 
 data class PlantModel(

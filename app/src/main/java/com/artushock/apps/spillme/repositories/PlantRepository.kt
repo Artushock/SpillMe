@@ -1,9 +1,9 @@
 package com.artushock.apps.spillme.repositories
 
 import com.artushock.apps.spillme.repositories.models.plants.PlantModel
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.CareFrequency
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.Fertilizer
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.PlantType
+import com.artushock.apps.spillme.repositories.models.plants.CareFrequency
+import com.artushock.apps.spillme.repositories.models.plants.Fertilizer
+import com.artushock.apps.spillme.repositories.models.plants.PlantType
 import kotlinx.coroutines.flow.Flow
 
 interface PlantRepository {

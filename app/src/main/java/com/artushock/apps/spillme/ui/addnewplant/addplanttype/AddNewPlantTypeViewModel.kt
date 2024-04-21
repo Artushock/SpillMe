@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artushock.apps.spillme.repositories.PlantRepository
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.AddTypeScreenState
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.CareFrequency
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.PlantType
+import com.artushock.apps.spillme.repositories.models.plants.CareFrequency
+import com.artushock.apps.spillme.repositories.models.plants.PlantType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
