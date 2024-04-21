@@ -3,7 +3,7 @@ package com.artushock.apps.spillme.ui.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artushock.apps.spillme.repositories.AuthRepository
-import com.artushock.apps.spillme.repositories.models.PreferencesRepository
+import com.artushock.apps.spillme.repositories.PreferencesRepository
 import com.artushock.apps.spillme.repositories.models.auth.AuthStateResult
 import com.artushock.apps.spillme.ui.model.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel

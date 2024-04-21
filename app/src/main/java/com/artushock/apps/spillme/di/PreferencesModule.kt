@@ -1,7 +1,7 @@
 package com.artushock.apps.spillme.di
 
 import android.content.Context
-import com.artushock.apps.spillme.repositories.models.PreferencesRepository
+import com.artushock.apps.spillme.repositories.PreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

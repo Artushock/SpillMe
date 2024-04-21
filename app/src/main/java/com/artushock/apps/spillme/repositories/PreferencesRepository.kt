@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.repositories.models
+package com.artushock.apps.spillme.repositories
 
 import android.content.Context
 
