@@ -33,7 +33,10 @@ fun AddPlantTypeContainer(
         AddPlantTypeNavigation.FREQUENCY_OF_CARE -> FrequencyOfCareScreen(
             state = screenState.value,
             onStateModified = { screenState.value = it },
-            onNext = {/*TODO*/}
+            onNext = {
+                viewModel.savePlantType(screenState.value)
+                    .invokeOnCompletion { navController.navigateUp() }
+            }
         )
     }
 }
