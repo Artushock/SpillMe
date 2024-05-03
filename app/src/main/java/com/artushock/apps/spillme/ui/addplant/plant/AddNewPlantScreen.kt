@@ -1,6 +1,9 @@
 package com.artushock.apps.spillme.ui.addplant.plant
 
-import android.widget.Toast
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +13,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -37,9 +43,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.extensions.shortToast
 import com.artushock.apps.spillme.repositories.models.plants.PlantLocation
@@ -61,6 +70,7 @@ import com.artushock.apps.spillme.ui.theme.MainBrown
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
+
 @Composable
 fun AddNewPlantScreen(
     navController: NavHostController,
@@ -68,9 +78,7 @@ fun AddNewPlantScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState()
-    val stateValue = state.value
-
-    when (stateValue) {
+    when (val stateValue = state.value) {
         is ViewState.Error -> ErrorScreen(
             stateValue.error.message ?: "Error"
         ) { navController.navigateUp() }
@@ -91,7 +99,6 @@ fun AddNewPlantScreen(
                         context.shortToast("Error ${throwable.message}")
                     }
                 }
-
             },
         )
     }
@@ -105,8 +112,6 @@ fun ContentScreen(
     onAddLocation: () -> Unit,
     onSaveClick: (AddPlantScreenState) -> Unit,
 ) {
-    val context = LocalContext.current
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,16 +123,7 @@ fun ContentScreen(
                 .align(Alignment.TopCenter)
         ) {
 
-            Image(painter = painterResource(id = R.drawable.add_photo_128),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clickable {
-                        Toast
-                            .makeText(context, "Add image", Toast.LENGTH_SHORT)
-                            .show()
-                    })
+            TakePhotoImage()
 
             EditTextField(labelText = "Name",
                 value = state.name,
@@ -170,6 +166,50 @@ fun ContentScreen(
             Text(text = "ADD", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
         }
     }
+}
+
+@Composable
+private fun TakePhotoImage() {
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri -> imageUri = uri }
+
+    val mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+    val request = PickVisualMediaRequest(mediaType)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        if (imageUri != null) {
+            AsyncImage(
+                model = imageUri.toString(), contentDescription = "",
+                modifier = Modifier
+                    .height(128.dp)
+                    .width(128.dp)
+                    .align(Alignment.Center)
+                    .clip(CircleShape)
+                    .clickable {
+                        launcher.launch(request)
+                    },
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Image(painter = painterResource(id = R.drawable.add_photo_128),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        launcher.launch(request)
+                    })
+        }
+    }
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
