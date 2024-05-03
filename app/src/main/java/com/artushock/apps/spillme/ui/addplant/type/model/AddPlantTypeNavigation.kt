@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.addnewplant.addplanttype.model
+package com.artushock.apps.spillme.ui.addplant.type.model
 
 enum class AddPlantTypeNavigation(private val id: Int) {
     WRONG(-1),

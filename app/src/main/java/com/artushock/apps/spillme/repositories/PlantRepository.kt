@@ -14,6 +14,7 @@ interface PlantRepository {
     suspend fun saveCare(care: CareFrequency): Int
     suspend fun connectFertilizerWithCare(fertilizerId: Int, careId: Int)
     suspend fun savePlantType(plantType: PlantType)
+    fun getPlantTypes(): Flow<List<PlantType>>
 
 
 }

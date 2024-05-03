@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.addnewplant.addplanttype
+package com.artushock.apps.spillme.ui.addplant.type
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.AddTypeScreenState
+import com.artushock.apps.spillme.ui.addplant.type.model.AddTypeScreenState
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 

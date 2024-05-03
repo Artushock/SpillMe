@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.addnewplant.addplanttype
+package com.artushock.apps.spillme.ui.addplant.type
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

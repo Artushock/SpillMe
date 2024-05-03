@@ -4,5 +4,4 @@ import androidx.room.Dao
 import com.artushock.database.entities.FertilizerCareJoinEntity
 
 @Dao
-interface FertilizerCareJoinDao : BaseDao<FertilizerCareJoinEntity> {
-}
+interface FertilizerCareJoinDao : BaseDao<FertilizerCareJoinEntity>

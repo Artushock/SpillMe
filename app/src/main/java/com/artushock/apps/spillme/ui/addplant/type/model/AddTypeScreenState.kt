@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.addnewplant.addplanttype.model
+package com.artushock.apps.spillme.ui.addplant.type.model
 
 import android.os.Parcelable
 import com.artushock.apps.spillme.repositories.models.plants.Fertilizer

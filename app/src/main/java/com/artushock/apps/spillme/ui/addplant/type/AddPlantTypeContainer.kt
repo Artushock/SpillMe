@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.addnewplant.addplanttype
+package com.artushock.apps.spillme.ui.addplant.type
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.AddPlantTypeNavigation
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.AddTypeScreenState
+import com.artushock.apps.spillme.ui.addplant.type.model.AddPlantTypeNavigation
+import com.artushock.apps.spillme.ui.addplant.type.model.AddTypeScreenState
 
 @Composable
 fun AddPlantTypeContainer(

@@ -1,9 +1,10 @@
-package com.artushock.apps.spillme.ui.addnewplant
+package com.artushock.apps.spillme.ui.addplant.plant
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DropdownMenu
@@ -28,11 +30,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,18 +42,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
+import com.artushock.apps.spillme.extensions.shortToast
 import com.artushock.apps.spillme.repositories.models.plants.PlantLocation
-import com.artushock.apps.spillme.repositories.models.plants.PlantModel
-import com.artushock.apps.spillme.repositories.models.plants.PlantType
+import com.artushock.apps.spillme.ui.addplant.plant.model.AddPlantScreenState
 import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
+import com.artushock.apps.spillme.ui.model.ViewState
 import com.artushock.apps.spillme.ui.navigation.NAV_ADD_NEW_PLANT_TYPE
 import com.artushock.apps.spillme.ui.theme.MainBrown
 import org.joda.time.DateTime
@@ -64,21 +67,45 @@ fun AddNewPlantScreen(
     viewModel: AddNewPlantViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val state = viewModel.state.collectAsState()
+    val stateValue = state.value
 
-    var txtPlantName by rememberSaveable { mutableStateOf("") }
-    var txtPlantDescription by rememberSaveable { mutableStateOf("") }
+    when (stateValue) {
+        is ViewState.Error -> ErrorScreen(
+            stateValue.error.message ?: "Error"
+        ) { navController.navigateUp() }
 
-    val dateTime = DateTime.now()
-    var selectedDate by rememberSaveable {
-        mutableLongStateOf(dateTime.millis)
+        is ViewState.Loading -> ProgressScreen()
+
+        is ViewState.Success -> ContentScreen(
+            state = stateValue.result,
+            onModifiedState = { viewModel.stateChanged(it) },
+            onAddPlantType = { navController.navigate(NAV_ADD_NEW_PLANT_TYPE) },
+            onAddLocation = {},
+            onSaveClick = { stateToSave ->
+                viewModel.addPlant(stateToSave).invokeOnCompletion { throwable ->
+                    if (throwable == null) {
+                        context.shortToast("Added new plant ${stateToSave.name}")
+                        navController.navigateUp()
+                    } else {
+                        context.shortToast("Error ${throwable.message}")
+                    }
+                }
+
+            },
+        )
     }
+}
 
-    val plantTypeOptions = getPlantTypes()
-    var selectedPlantType by remember { mutableStateOf(plantTypeOptions[0]) }
-
-    val locationOptions = getPlantLocations()
-    var selectedLocation by remember { mutableStateOf(locationOptions[0]) }
-
+@Composable
+fun ContentScreen(
+    state: AddPlantScreenState,
+    onModifiedState: (AddPlantScreenState) -> Unit,
+    onAddPlantType: () -> Unit,
+    onAddLocation: () -> Unit,
+    onSaveClick: (AddPlantScreenState) -> Unit,
+) {
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -103,97 +130,47 @@ fun AddNewPlantScreen(
                     })
 
             EditTextField(labelText = "Name",
-                value = txtPlantName,
-                onValueChanged = { txtPlantName = it })
+                value = state.name,
+                onValueChanged = { onModifiedState(state.copy(name = it)) })
 
             EditTextField(labelText = "Description",
-                value = txtPlantDescription,
-                onValueChanged = { txtPlantDescription = it })
+                value = state.description,
+                onValueChanged = { onModifiedState(state.copy(description = it)) })
 
-            DatePickerEditView(selectedDate) {
-                selectedDate = it
+            DatePickerEditView(state.date.millis) {
+                onModifiedState(state.copy(date = DateTime(it)))
             }
 
-            DropDownEditText(navController, "Plant type", plantTypeOptions, selectedPlantType) {
-                selectedPlantType = it
-            }
 
-            DropDownEditText(navController, "Location", locationOptions, selectedLocation) {
-                selectedLocation = it
-            }
+
+            DropDownEditText(
+                label = "Plant type",
+                options = state.plantTypes,
+                selectedItem = state.plantType,
+                onChangeSelectionOption = { onModifiedState(state.copy(plantType = it)) },
+                onAddItem = onAddPlantType,
+            )
+
+            DropDownEditText(
+                label = "Location",
+                options = emptyList<PlantLocation>(),
+                selectedItem = state.location,
+                onChangeSelectionOption = { onModifiedState(state.copy(location = it)) },
+                onAddItem = onAddLocation,
+            )
         }
 
         Button(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp), onClick = {
-                viewModel.addPlant(
-                    PlantModel(
-                        id = 0,
-                        name = txtPlantName,
-                        description = txtPlantDescription,
-                        plantDate = DateTime(selectedDate),
-                        plantType = selectedPlantType,
-                        location = selectedLocation,
-                    )
-                ).invokeOnCompletion {
-                    Toast.makeText(context, "Added new plant $txtPlantName", Toast.LENGTH_SHORT)
-                        .show()
-                    navController.navigateUp()
-                }
-            }, colors = getButtonColors()
+                .padding(16.dp), onClick = { onSaveClick(state) },
+            colors = getButtonColors()
         ) {
             IconPlus(20)
             Text(text = "ADD", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
         }
     }
-
-
 }
-
-fun getPlantLocations(): List<PlantLocation> = listOf(
-    PlantLocation(
-        id = 1,
-        name = "Location #1",
-        description = "Description of Location #1",
-    ),
-    PlantLocation(
-        id = 2,
-        name = "Location #2",
-        description = "Description of Location #2",
-    ),
-    PlantLocation(
-        id = 3,
-        name = "Location #3",
-        description = "Description of Location #3",
-    )
-)
-
-
-fun getPlantTypes(): List<PlantType> = listOf(
-    PlantType(
-        id = 1,
-        name = "Plant #1",
-        description = "Description of Plant #1",
-        careId = null,
-        conditionsId = null,
-    ),
-    PlantType(
-        id = 2,
-        name = "Plant #2",
-        description = "Description of Plant #2",
-        careId = null,
-        conditionsId = null,
-    ),
-    PlantType(
-        id = 3,
-        name = "Plant #3",
-        description = "Description of Plant #3",
-        careId = null,
-        conditionsId = null,
-    )
-)
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -254,11 +231,11 @@ private fun DatePickerEditView(selectedDate: Long, onPlantingDateChanged: (Long)
 
 @Composable
 fun <T> DropDownEditText(
-    navController: NavHostController,
-    labelText: String,
+    label: String,
     options: List<T>,
     selectedItem: T,
     onChangeSelectionOption: (T) -> Unit,
+    onAddItem: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -277,7 +254,7 @@ fun <T> DropDownEditText(
             OutlinedTextField(
                 value = selectedItem.toString(),
                 onValueChange = { expanded = true },
-                label = { Text(labelText) },
+                label = { Text(label) },
                 modifier = Modifier
                     .weight(1.0F)
                     .padding(0.dp, 0.dp, 16.dp, 0.dp),
@@ -291,7 +268,7 @@ fun <T> DropDownEditText(
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp)
             )
 
-            IconButton(onClick = { navController.navigate(NAV_ADD_NEW_PLANT_TYPE) }) {
+            IconButton(onClick = { onAddItem() }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_add_button_48),
                     contentDescription = null
@@ -315,5 +292,33 @@ fun <T> DropDownEditText(
                     })
                 }
             })
+    }
+}
+
+@Preview()
+@Composable
+fun ErrorScreen(
+    message: String = "",
+    onButtonClick: () -> Unit = {},
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Red),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(text = message)
+        Button(onClick = { onButtonClick() }) {
+            Text(text = "OK")
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ProgressScreen() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }

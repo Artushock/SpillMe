@@ -2,6 +2,8 @@ package com.artushock.database.di
 
 import android.content.Context
 import androidx.room.Room
+import com.artushock.database.db.SpillMeDatabase
+import com.artushock.database.dbcallback.dbCallback
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,30 +16,32 @@ import javax.inject.Singleton
 class DatabaseModule {
 
     @Provides
-    fun providePlantsDao(database: com.artushock.database.db.SpillMeDatabase) = database.plantDao()
+    fun providePlantsDao(database: SpillMeDatabase) = database.plantDao()
 
     @Provides
-    fun providePlantsTypeDao(database: com.artushock.database.db.SpillMeDatabase) = database.plantTypeDao()
+    fun providePlantsTypeDao(database: SpillMeDatabase) = database.plantTypeDao()
 
     @Provides
-    fun provideFertilizerDao(database: com.artushock.database.db.SpillMeDatabase) = database.fertilizerDao()
+    fun provideFertilizerDao(database: SpillMeDatabase) = database.fertilizerDao()
 
     @Provides
-    fun provideFertilizerCareJoinDao(database: com.artushock.database.db.SpillMeDatabase) = database.fertilizerCareJoinDao()
+    fun provideFertilizerCareJoinDao(database: SpillMeDatabase) = database.fertilizerCareJoinDao()
 
     @Provides
-    fun provideConditionsDao(database: com.artushock.database.db.SpillMeDatabase) = database.conditionsDao()
+    fun provideConditionsDao(database: SpillMeDatabase) = database.conditionsDao()
 
     @Provides
-    fun provideCareFrequencyDao(database: com.artushock.database.db.SpillMeDatabase) = database.careFrequencyDao()
+    fun provideCareFrequencyDao(database: SpillMeDatabase) = database.careFrequencyDao()
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext applicationContext: Context): com.artushock.database.db.SpillMeDatabase {
+    fun provideDatabase(@ApplicationContext applicationContext: Context): SpillMeDatabase {
         return Room.databaseBuilder(
             applicationContext,
-            com.artushock.database.db.SpillMeDatabase::class.java,
+            SpillMeDatabase::class.java,
             "database"
-        ).build()
+        )
+            .addCallback(dbCallback)
+            .build()
     }
 }

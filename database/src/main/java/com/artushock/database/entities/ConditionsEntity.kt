@@ -9,8 +9,8 @@ data class ConditionsEntity(
     val id: Int,
     val minTemperature: Int,
     val maxTemperature: Int,
-    val minHumidity:Int,
-    val maxHumidity:Int,
+    val minHumidity: Int,
+    val maxHumidity: Int,
     val lightningType: Int,
-    val soilId:Int,
+    val soilId: Int,
 )

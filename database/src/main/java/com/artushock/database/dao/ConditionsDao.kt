@@ -4,5 +4,4 @@ import androidx.room.Dao
 import com.artushock.database.entities.ConditionsEntity
 
 @Dao
-interface ConditionsDao : BaseDao<ConditionsEntity> {
-}
+interface ConditionsDao : BaseDao<ConditionsEntity>

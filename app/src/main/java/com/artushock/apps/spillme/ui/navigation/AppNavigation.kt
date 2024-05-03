@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.artushock.apps.spillme.ui.addnewplant.AddNewPlantScreen
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.AddPlantTypeContainer
+import com.artushock.apps.spillme.ui.addplant.plant.AddNewPlantScreen
+import com.artushock.apps.spillme.ui.addplant.type.AddPlantTypeContainer
 import com.artushock.apps.spillme.ui.auth.AuthScreen
 import com.artushock.apps.spillme.ui.base.AppBarPage
 import com.artushock.apps.spillme.ui.mainlist.MainListScreen

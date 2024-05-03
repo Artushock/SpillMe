@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.addnewplant.addplanttype
+package com.artushock.apps.spillme.ui.addplant.type
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.artushock.apps.spillme.R
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.AddTypeScreenState
+import com.artushock.apps.spillme.ui.addplant.type.model.AddTypeScreenState
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.sliders.IntervalSlider
 
