@@ -2,6 +2,7 @@ package com.artushock.apps.spillme.ui.mainlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,10 +16,15 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,21 +60,31 @@ fun MainListScreen(
         ) {
             items(
                 items = plants,
-                itemContent = { PlantItem(plant = it) }
+                itemContent = {
+                    PlantItem(plant = it) { plantId ->
+                        viewModel.removeItem(plantId)
+                    }
+                }
             )
         }
     }
 }
 
 @Composable
-fun PlantItem(plant: MainListPlantModel) {
+fun PlantItem(
+    plant: MainListPlantModel,
+    onRemove: (Int) -> Unit,
+) {
+
+    var expanded by remember { mutableStateOf(false) }
+
     Column(
         Modifier
             .shadow(3.dp, shape = RoundedCornerShape(8.dp))
             .clip(shape = RoundedCornerShape(6.dp))
             .fillMaxSize()
             .background(MainBeige)
-
+            .clickable { expanded = !expanded }
     ) {
         Text(
             text = plant.name,
@@ -100,9 +116,12 @@ fun PlantItem(plant: MainListPlantModel) {
                 .background(MainBeige)
                 .padding(8.dp, 8.dp),
             horizontalArrangement = Arrangement.SpaceAround,
-
-
-            ) {
+        ) {
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                DropdownMenuItem(
+                    text = { Text(text = "Remove") },
+                    onClick = { onRemove.invoke(plant.localId) })
+            }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_watering),

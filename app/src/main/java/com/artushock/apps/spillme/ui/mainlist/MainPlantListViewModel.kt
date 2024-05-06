@@ -44,4 +44,10 @@ class MainPlantListViewModel @Inject constructor(
             }
         }
     }
+
+    fun removeItem(plantId: Int) = viewModelScope.launch {
+        plantRepository.removePlant(plantId)
+    }.invokeOnCompletion {
+        if (it == null) getPlants()
+    }
 }

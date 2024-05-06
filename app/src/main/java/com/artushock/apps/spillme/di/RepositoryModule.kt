@@ -1,22 +1,21 @@
 package com.artushock.apps.spillme.di
 
-import com.artushock.apps.spillme.db.dao.PlantDao
+import com.artushock.apps.spillme.repositories.AuthRepository
+import com.artushock.apps.spillme.repositories.AuthRepositoryImpl
 import com.artushock.apps.spillme.repositories.PlantRepository
+import com.artushock.apps.spillme.repositories.PlantRepositoryImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+
 
 @InstallIn(SingletonComponent::class)
 @Module
-class RepositoryModule {
+interface RepositoryBindModule {
+    @Binds
+    fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
-    @Provides
-    @Singleton
-    fun providePlantRepository(
-        plantDao: PlantDao,
-    ): PlantRepository {
-        return PlantRepository(plantDao)
-    }
+    @Binds
+    fun bindPlantRepository(impl: PlantRepositoryImpl): PlantRepository
 }

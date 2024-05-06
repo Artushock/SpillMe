@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
+import com.artushock.apps.spillme.ui.navigation.NAV_ADD_NEW_PLANT
 import com.artushock.apps.spillme.ui.theme.MainBeige
 import com.artushock.apps.spillme.ui.theme.MainGreen
 
@@ -40,11 +41,11 @@ fun AppBarPage(
                         color = Color.White
                     )
                 },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MainGreen),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MainGreen),
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
                             tint = MainBeige
                         )
@@ -52,7 +53,7 @@ fun AppBarPage(
                 },
                 actions = {
                     if (actions) {
-                        IconButton(onClick = { navController.navigate("addNewPlant") }) {
+                        IconButton(onClick = { navController.navigate(NAV_ADD_NEW_PLANT) }) {
                             IconPlus()
                         }
                     }
