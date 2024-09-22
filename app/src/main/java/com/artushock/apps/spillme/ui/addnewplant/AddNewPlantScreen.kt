@@ -103,10 +103,12 @@ fun AddNewPlantScreen(
 
             EditTextField(labelText = "Name",
                 value = txtPlantName,
+                isError = false,
                 onValueChanged = { txtPlantName = it })
 
             EditTextField(labelText = "Description",
                 value = txtPlantDescription,
+                isError = false,
                 onValueChanged = { txtPlantDescription = it })
 
             DatePickerEditView(selectedDate) {

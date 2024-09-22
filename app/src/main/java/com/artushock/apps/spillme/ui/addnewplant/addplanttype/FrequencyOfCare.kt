@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -33,33 +32,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.Fertilizer
+import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.NewPlantType
 import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.base.sliders.IntervalSlider
+import com.artushock.apps.spillme.ui.theme.MainBrown
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FrequencyOfCareScreen(
-    navController: NavController,
-    viewModel: AddNewPlantTypeViewModel = hiltViewModel(),
+    plantType: NewPlantType,
+    onAddFertilizer: (Fertilizer) -> Unit,
 ) {
 
     var addFertilizerDialogShown by remember { mutableStateOf(false) }
-    val state by viewModel.state.collectAsState()
 
     if (addFertilizerDialogShown) {
         AddNewFertilizerDialog(
             onDismiss = { addFertilizerDialogShown = false },
             onAddItem = { fertilizer ->
-                viewModel.addFertilizer(fertilizer)
+                onAddFertilizer(fertilizer)
                 addFertilizerDialogShown = false
             },
         )
@@ -75,42 +74,58 @@ fun FrequencyOfCareScreen(
                 .align(Alignment.TopCenter)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(text = state.name)
-            Text(text = state.description)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp)
+                    .align(Alignment.End)
+            ) {
+                Text(
+                    text = plantType.name,
+                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(color = MainBrown, fontSize = 24.sp)
+                )
+                Text(
+                    text = plantType.description,
+                    fontWeight = FontWeight.Thin,
+                    style = TextStyle(color = MainBrown, fontSize = 14.sp)
+                )
+            }
+
             IntervalSlider(
                 name = "Watering",
                 units = "days",
                 minValue = 1,
                 maxValue = 14,
-                defaultValue = state.wateringFrequency,
+                defaultValue = plantType.wateringFrequency,
                 valueChangeListener = {/*todo*/ })
             IntervalSlider(
                 name = "Spraying",
                 units = "days",
                 minValue = 1,
                 maxValue = 30,
-                defaultValue = state.sprayingFrequency,
+                defaultValue = plantType.sprayingFrequency,
                 valueChangeListener = {/*todo*/ })
             IntervalSlider(
                 name = "Rubbing",
                 units = "months",
                 minValue = 1,
                 maxValue = 12,
-                defaultValue = state.rubbingFrequency,
+                defaultValue = plantType.rubbingFrequency,
                 valueChangeListener = {/*todo*/ })
             IntervalSlider(
                 name = "Transplanting",
                 units = "months",
                 minValue = 6,
                 maxValue = 36,
-                defaultValue = state.transplantingFrequency,
+                defaultValue = plantType.transplantingFrequency,
                 valueChangeListener = {/*todo*/ })
             IntervalSlider(
                 name = "Bathing",
                 units = "months",
                 minValue = 6,
                 maxValue = 36,
-                defaultValue = state.bathingFrequency,
+                defaultValue = plantType.bathingFrequency,
                 valueChangeListener = {/*todo*/ })
 
             Box(
@@ -149,7 +164,7 @@ fun FrequencyOfCareScreen(
                 modifier = Modifier.padding(16.dp, 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                state.fertilizers.map {
+                plantType.fertilizers.map {
                     SuggestionChip(
                         onClick = { /*TODO*/ },
                         label = { Text(text = "${it.name} ${it.frequency} month") })
@@ -185,6 +200,7 @@ fun AddNewFertilizerDialog(
                 )
                 EditTextField(labelText = "Fertilizer name",
                     value = txtFertilizerName,
+                    isError = false,
                     onValueChanged = { txtFertilizerName = it })
                 IntervalSlider(
                     isCheckboxVisible = false,

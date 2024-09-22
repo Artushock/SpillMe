@@ -1,6 +1,7 @@
 package com.artushock.apps.spillme.ui.addnewplant.addplanttype.model
 
-sealed class Result<out T> {
-    data class Success<T>(val data: T) : Result<T>()
-    data class Error(val error: Exception) : Result<Nothing>()
+sealed class UiState<out T> {
+    data object Loading: UiState<Nothing>()
+    data class Success<T>(val data: T) : UiState<T>()
+    data class Error(val throwable: Throwable) : UiState<Nothing>()
 }
