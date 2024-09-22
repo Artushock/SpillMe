@@ -1,5 +1,6 @@
 package com.artushock.apps.spillme.di
 
+import com.artushock.apps.spillme.db.dao.FertilizerDao
 import com.artushock.apps.spillme.db.dao.PlantDao
 import com.artushock.apps.spillme.repositories.PlantRepository
 import dagger.Module
@@ -16,7 +17,8 @@ class RepositoryModule {
     @Singleton
     fun providePlantRepository(
         plantDao: PlantDao,
+        fertilizerDao: FertilizerDao,
     ): PlantRepository {
-        return PlantRepository(plantDao)
+        return PlantRepository(plantDao, fertilizerDao)
     }
 }

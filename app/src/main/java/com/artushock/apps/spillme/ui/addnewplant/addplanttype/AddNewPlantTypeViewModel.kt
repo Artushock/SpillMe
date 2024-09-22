@@ -2,6 +2,7 @@ package com.artushock.apps.spillme.ui.addnewplant.addplanttype
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.artushock.apps.spillme.db.entities.FertilizerEntity
 import com.artushock.apps.spillme.repositories.PlantRepository
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.Fertilizer
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.NewPlantType
@@ -32,9 +33,14 @@ class AddNewPlantTypeViewModel @Inject constructor(
     }
 
     fun addFertilizer(fertilizer: Fertilizer) {
-        val editFertilizers = ArrayList(plantType.fertilizers)
-        editFertilizers.add(fertilizer)
-        success(plantType.copy(fertilizers = editFertilizers))
+        loading()
+        viewModelScope.launch {
+            plantRepository.addFertilizer(FertilizerEntity(fertilizer))
+        }.invokeOnCompletion {
+            val editFertilizers = ArrayList(plantType.fertilizers)
+            editFertilizers.add(fertilizer)
+            success(plantType.copy(fertilizers = editFertilizers))
+        }
     }
 
     private fun loading() = viewModelScope.launch {
