@@ -43,19 +43,6 @@ class AddNewPlantTypeViewModel @Inject constructor(
         }
     }
 
-    private fun loading() = viewModelScope.launch {
-        _state.value = UiState.Loading
-    }
-
-    private fun error(throwable: Throwable) = viewModelScope.launch {
-        _state.value = UiState.Error(throwable)
-    }
-
-    private fun success(newPlantType: NewPlantType) {
-        plantType = newPlantType
-        _state.value = UiState.Success(plantType)
-    }
-
     fun nextStep() {
         when (plantType.step) {
             NewPlantTypeStep.FIRST_STEP -> goToSecondStep()
@@ -87,5 +74,28 @@ class AddNewPlantTypeViewModel @Inject constructor(
 
     fun messageShown() {
         success(plantType.copy(message = null))
+    }
+
+    fun setTemperature(minTemp: Int, maxTemp: Int) {
+        plantType = plantType.copy(minTemp = minTemp, maxTemp = maxTemp)
+        success(plantType)
+    }
+
+    fun setHumidity(minHumidity: Int, maxHumidity: Int) {
+        plantType = plantType.copy(minHumidity = minHumidity, maxHumidity = maxHumidity)
+        success(plantType)
+    }
+
+    private fun loading() = viewModelScope.launch {
+        _state.value = UiState.Loading
+    }
+
+    private fun error(throwable: Throwable) = viewModelScope.launch {
+        _state.value = UiState.Error(throwable)
+    }
+
+    private fun success(newPlantType: NewPlantType) {
+        plantType = newPlantType
+        _state.value = UiState.Success(plantType)
     }
 }

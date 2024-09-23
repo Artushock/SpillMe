@@ -3,8 +3,11 @@ package com.artushock.apps.spillme.ui.addnewplant.addplanttype
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -21,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -29,6 +33,7 @@ import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.NewPlantType
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.UiState
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
+import com.artushock.apps.spillme.ui.base.sliders.RangeValuesSlider
 
 @Composable
 fun AddNewPlantTypeScreen(
@@ -66,8 +71,14 @@ fun AddNewPlantTypeScreen(
                             nameError = plantType.nameError,
                             description = plantType.description,
                             descriptionError = plantType.descriptionError,
+                            minTemp = plantType.minTemp,
+                            maxTemp = plantType.maxTemp,
+                            minHumidity = plantType.minHumidity,
+                            maxHumidity = plantType.maxHumidity,
                             onNameChanged = viewModel::changedName,
-                            onDescriptionChanged = viewModel::changedDescription
+                            onDescriptionChanged = viewModel::changedDescription,
+                            onTemperatureChanged = viewModel::setTemperature,
+                            onHumidityChanged = viewModel::setHumidity
                         )
 
                         NewPlantTypeStep.SECOND_STEP -> FrequencyOfCareScreen(
@@ -107,8 +118,14 @@ fun FirstStep(
     nameError: Boolean,
     description: String,
     descriptionError: Boolean,
+    minTemp: Int,
+    maxTemp: Int,
+    minHumidity: Int,
+    maxHumidity: Int,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
+    onTemperatureChanged: (Int, Int) -> Unit,
+    onHumidityChanged: (Int, Int) -> Unit,
 ) {
     var txtPlantName by remember { mutableStateOf(name) }
     var txtPlantDescription by remember { mutableStateOf(description) }
@@ -131,6 +148,36 @@ fun FirstStep(
             txtPlantDescription = text
             onDescriptionChanged(text)
         }
+    )
+    
+    Spacer(modifier = Modifier.height(32.dp))
+
+    RangeValuesSlider(
+        isCheckboxVisible = false,
+                name = "Temperature",
+                units = "°C",
+                minValue = -20,
+                maxValue = 50,
+                defaultValue = minTemp.toFloat()..maxTemp.toFloat(),
+                valueChangeListener = { range ->
+                    range?.let {
+                        onTemperatureChanged(it.start.toInt(), it.endInclusive.toInt())
+                    }
+                },
+    )
+
+    RangeValuesSlider(
+        isCheckboxVisible = false,
+        name = "Humidity",
+        units = "%",
+        minValue = 0,
+        maxValue = 100,
+        defaultValue = minHumidity.toFloat()..maxHumidity.toFloat(),
+        valueChangeListener = { range ->
+            range?.let {
+                onHumidityChanged(it.start.toInt(), it.endInclusive.toInt())
+            }
+        },
     )
 }
 

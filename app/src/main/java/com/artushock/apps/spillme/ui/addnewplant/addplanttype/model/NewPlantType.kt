@@ -7,6 +7,12 @@ data class NewPlantType(
     val nameError: Boolean = false,
     val description: String = "",
     val descriptionError: Boolean = false,
+
+    val minTemp: Int = 10,
+    val maxTemp: Int = 30,
+    val minHumidity: Int = 10,
+    val maxHumidity: Int = 90,
+
     val wateringFrequency: Int = 3,
     val sprayingFrequency: Int = 12,
     val rubbingFrequency: Int = 1,
