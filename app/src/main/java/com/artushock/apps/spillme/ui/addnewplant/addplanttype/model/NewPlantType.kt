@@ -13,6 +13,8 @@ data class NewPlantType(
     val minHumidity: Int = 10,
     val maxHumidity: Int = 90,
 
+    val lighting: Lighting = Lighting.DIFFUSE_SUNLIGHT,
+
     val wateringFrequency: Int = 3,
     val sprayingFrequency: Int = 12,
     val rubbingFrequency: Int = 1,
