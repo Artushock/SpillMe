@@ -64,112 +64,99 @@ fun FrequencyOfCareScreen(
         )
     }
 
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp)
+    ) {
+        Text(
+            text = plantType.name,
+            fontWeight = FontWeight.Bold,
+            style = TextStyle(color = MainBrown, fontSize = 24.sp)
+        )
+        Text(
+            text = plantType.description,
+            fontWeight = FontWeight.Thin,
+            style = TextStyle(color = MainBrown, fontSize = 14.sp)
+        )
+    }
+
+    IntervalSlider(
+        name = "Watering",
+        units = "days",
+        minValue = 1,
+        maxValue = 14,
+        defaultValue = plantType.wateringFrequency,
+        valueChangeListener = {/*todo*/ })
+    IntervalSlider(
+        name = "Spraying",
+        units = "days",
+        minValue = 1,
+        maxValue = 30,
+        defaultValue = plantType.sprayingFrequency,
+        valueChangeListener = {/*todo*/ })
+    IntervalSlider(
+        name = "Rubbing",
+        units = "months",
+        minValue = 1,
+        maxValue = 12,
+        defaultValue = plantType.rubbingFrequency,
+        valueChangeListener = {/*todo*/ })
+    IntervalSlider(
+        name = "Transplanting",
+        units = "months",
+        minValue = 6,
+        maxValue = 36,
+        defaultValue = plantType.transplantingFrequency,
+        valueChangeListener = {/*todo*/ })
+    IntervalSlider(
+        name = "Bathing",
+        units = "months",
+        minValue = 6,
+        maxValue = 36,
+        defaultValue = plantType.bathingFrequency,
+        valueChangeListener = {/*todo*/ })
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(16.dp, 0.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.TopCenter)
-                .verticalScroll(rememberScrollState())
+        Row(modifier = Modifier.align(Alignment.CenterStart)) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_feeding),
+                contentDescription = "Feeding icon"
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Fertilizers",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        IconButton(
+            onClick = { addFertilizerDialogShown = true },
+            modifier = Modifier.align(Alignment.CenterEnd)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp)
-                    .align(Alignment.End)
-            ) {
-                Text(
-                    text = plantType.name,
-                    fontWeight = FontWeight.Bold,
-                    style = TextStyle(color = MainBrown, fontSize = 24.sp)
-                )
-                Text(
-                    text = plantType.description,
-                    fontWeight = FontWeight.Thin,
-                    style = TextStyle(color = MainBrown, fontSize = 14.sp)
-                )
-            }
-
-            IntervalSlider(
-                name = "Watering",
-                units = "days",
-                minValue = 1,
-                maxValue = 14,
-                defaultValue = plantType.wateringFrequency,
-                valueChangeListener = {/*todo*/ })
-            IntervalSlider(
-                name = "Spraying",
-                units = "days",
-                minValue = 1,
-                maxValue = 30,
-                defaultValue = plantType.sprayingFrequency,
-                valueChangeListener = {/*todo*/ })
-            IntervalSlider(
-                name = "Rubbing",
-                units = "months",
-                minValue = 1,
-                maxValue = 12,
-                defaultValue = plantType.rubbingFrequency,
-                valueChangeListener = {/*todo*/ })
-            IntervalSlider(
-                name = "Transplanting",
-                units = "months",
-                minValue = 6,
-                maxValue = 36,
-                defaultValue = plantType.transplantingFrequency,
-                valueChangeListener = {/*todo*/ })
-            IntervalSlider(
-                name = "Bathing",
-                units = "months",
-                minValue = 6,
-                maxValue = 36,
-                defaultValue = plantType.bathingFrequency,
-                valueChangeListener = {/*todo*/ })
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 0.dp)
-            ) {
-                Row(modifier = Modifier.align(Alignment.CenterStart)) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_feeding),
-                        contentDescription = "Feeding icon"
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Fertilizers",
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                IconButton(
-                    onClick = { addFertilizerDialogShown = true },
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_plus_24),
-                        contentDescription = "Plus icon",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
+            Icon(
+                painter = painterResource(id = R.drawable.ic_plus_24),
+                contentDescription = "Plus icon",
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
 
 
-            FlowRow(
-                modifier = Modifier.padding(16.dp, 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                plantType.fertilizers.map {
-                    SuggestionChip(
-                        onClick = { /*TODO*/ },
-                        label = { Text(text = "${it.name} ${it.frequency} month") })
-                }
-            }
+    FlowRow(
+        modifier = Modifier.padding(16.dp, 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        plantType.fertilizers.map {
+            SuggestionChip(
+                onClick = { /*TODO*/ },
+                label = { Text(text = "${it.name} ${it.frequency} month") })
         }
     }
 }
