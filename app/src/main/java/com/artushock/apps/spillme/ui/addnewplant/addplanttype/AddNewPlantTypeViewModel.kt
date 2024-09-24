@@ -25,7 +25,7 @@ class AddNewPlantTypeViewModel @Inject constructor(
     val state: StateFlow<UiState<NewPlantType>> get() = _state
 
     fun changedName(name: String) {
-        success(plantType.copy(name = name, descriptionError = false))
+        success(plantType.copy(name = name, nameError = false))
     }
 
     fun changedDescription(description: String) {
