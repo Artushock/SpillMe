@@ -1,7 +1,6 @@
 package com.artushock.apps.spillme.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavArgument
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,7 +8,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.artushock.apps.spillme.ui.addnewplant.AddNewPlantScreen
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.AddNewPlantTypeScreen
-import com.artushock.apps.spillme.ui.addnewplant.addplanttype.FrequencyOfCareScreen
 import com.artushock.apps.spillme.ui.base.AppBarPage
 import com.artushock.apps.spillme.ui.mainlist.MainListScreen
 
@@ -32,27 +30,24 @@ fun AppNavigation() {
         composable(
             route = "addNewPlantType",
 
-        ) {  navBackStackEntry ->
+            ) { navBackStackEntry ->
             AppBarPage(title = "Add plant type", navController = navController) {
-                val name: String = navBackStackEntry.arguments?.getString("plant_type_name") ?: "No name"
-                val description: String = navBackStackEntry.arguments?.getString("plantType_description") ?: "No description"
                 AddNewPlantTypeScreen(
-                    name = name,
-                    description = description,
-                    navController = navController)
+                    navController = navController
+                )
             }
         }
         composable("frequencyOfCare",
-                arguments = listOf(
-                navArgument("plant_type_name"){
+            arguments = listOf(
+                navArgument("plant_type_name") {
                     NavType.StringType
                 },
-            navArgument("plantType_description"){
-                NavType.StringType
-            }
-        )) {
+                navArgument("plantType_description") {
+                    NavType.StringType
+                }
+            )) {
             AppBarPage(title = "Frequency of care", navController = navController) {
-                FrequencyOfCareScreen(navController = navController)
+//                FrequencyOfCareScreen(navController = navController)
             }
         }
     }

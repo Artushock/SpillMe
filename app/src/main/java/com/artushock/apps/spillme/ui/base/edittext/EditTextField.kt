@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors
 
 @Composable
-fun EditTextField(labelText: String, value: String, onValueChanged: ((String) -> Unit)?) {
+fun EditTextField(labelText: String, value: String, isError: Boolean, onValueChanged: ((String) -> Unit)?) {
     OutlinedTextField(
         value = value,
         onValueChange = { onValueChanged?.let { lambda -> lambda(it) } },
@@ -21,7 +21,8 @@ fun EditTextField(labelText: String, value: String, onValueChanged: ((String) ->
             .fillMaxWidth()
             .padding(8.dp),
         colors = getTextFieldColors(),
-        textStyle = LocalTextStyle.current.copy(fontSize = 18.sp)
+        textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
+        isError= isError,
     )
 }
 
