@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +42,8 @@ import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.base.sliders.RangeValuesSlider
 import com.artushock.apps.spillme.ui.theme.MainBrown
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @Composable
 fun AddNewPlantTypeScreen(
@@ -48,6 +51,15 @@ fun AddNewPlantTypeScreen(
     viewModel: AddNewPlantTypeViewModel = hiltViewModel(),
 ) {
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val state: UiState<NewPlantType> by viewModel.state.collectAsState()
+
+    val exit = viewModel.exitChannel.receiveAsFlow()
+    LaunchedEffect(1) {
+        exit.collectLatest {
+            navController.popBackStack()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -59,9 +71,6 @@ fun AddNewPlantTypeScreen(
                 .align(Alignment.TopCenter)
                 .verticalScroll(scrollState)
         ) {
-            val context = LocalContext.current
-            val state: UiState<NewPlantType> by viewModel.state.collectAsState()
-
             when (state) {
                 is UiState.Success -> {
                     val plantType: NewPlantType = (state as UiState.Success<NewPlantType>).data
@@ -81,11 +90,11 @@ fun AddNewPlantTypeScreen(
                             nameError = plantType.nameError,
                             description = plantType.description,
                             descriptionError = plantType.descriptionError,
-                            minTemp = plantType.minTemp,
-                            maxTemp = plantType.maxTemp,
-                            minHumidity = plantType.minHumidity,
-                            maxHumidity = plantType.maxHumidity,
-                            lighting = plantType.lighting,
+                            minTemp = plantType.conditions.minTemp,
+                            maxTemp = plantType.conditions.maxTemp,
+                            minHumidity = plantType.conditions.minHumidity,
+                            maxHumidity = plantType.conditions.maxHumidity,
+                            lighting = plantType.conditions.lighting,
                             onNameChanged = viewModel::changedName,
                             onDescriptionChanged = viewModel::changedDescription,
                             onTemperatureChanged = viewModel::setTemperature,
@@ -94,10 +103,9 @@ fun AddNewPlantTypeScreen(
 
                         NewPlantTypeStep.SECOND_STEP -> FrequencyOfCareScreen(
                             plantType = plantType,
+                            onCareChanged = viewModel::changeCare,
                             onAddFertilizer = viewModel::addFertilizer
                         )
-
-                        NewPlantTypeStep.LAST_STEP -> TODO()
                     }
                 }
 
@@ -120,7 +128,9 @@ fun AddNewPlantTypeScreen(
                 .padding(16.dp),
             colors = getButtonColors()
         ) {
-            Text(text = "NEXT", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
+            val buttonText =
+                if (state is UiState.Success && (state as UiState.Success<NewPlantType>).data.step == NewPlantTypeStep.SECOND_STEP) "FINISH" else "NEXT"
+            Text(text = buttonText, fontSize = 16.sp, modifier = Modifier.padding(8.dp))
         }
     }
 }
@@ -224,11 +234,15 @@ fun FirstStep(
 
 @Composable
 fun Progress() {
-    CircularProgressIndicator(
-        modifier = Modifier.width(64.dp),
-        color = MaterialTheme.colorScheme.secondary,
-        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(64.dp)
+                .align(Alignment.Center),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+    }
 }
 
 @Composable

@@ -8,12 +8,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -40,6 +37,7 @@ import androidx.compose.ui.window.Dialog
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.Fertilizer
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.NewPlantType
+import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.PlantTypeCare
 import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.base.sliders.IntervalSlider
@@ -49,6 +47,7 @@ import com.artushock.apps.spillme.ui.theme.MainBrown
 @Composable
 fun FrequencyOfCareScreen(
     plantType: NewPlantType,
+    onCareChanged: (PlantTypeCare) -> Unit,
     onAddFertilizer: (Fertilizer) -> Unit,
 ) {
 
@@ -86,36 +85,56 @@ fun FrequencyOfCareScreen(
         units = "days",
         minValue = 1,
         maxValue = 14,
-        defaultValue = plantType.wateringFrequency,
-        valueChangeListener = {/*todo*/ })
+        defaultValue = plantType.care.wateringFrequency ?: 0,
+        valueChangeListener = { value ->
+            value?.let {
+                onCareChanged(plantType.care.copy(wateringFrequency = it))
+            }
+        })
     IntervalSlider(
         name = "Spraying",
         units = "days",
         minValue = 1,
         maxValue = 30,
-        defaultValue = plantType.sprayingFrequency,
-        valueChangeListener = {/*todo*/ })
+        defaultValue = plantType.care.sprayingFrequency ?: 0,
+        valueChangeListener = { value ->
+            value?.let {
+                onCareChanged(plantType.care.copy(sprayingFrequency = it))
+            }
+        })
     IntervalSlider(
         name = "Rubbing",
         units = "months",
         minValue = 1,
         maxValue = 12,
-        defaultValue = plantType.rubbingFrequency,
-        valueChangeListener = {/*todo*/ })
+        defaultValue = plantType.care.rubbingFrequency ?: 0,
+        valueChangeListener = { value ->
+            value?.let {
+                onCareChanged(plantType.care.copy(rubbingFrequency = it))
+            }
+        })
     IntervalSlider(
         name = "Transplanting",
         units = "months",
         minValue = 6,
         maxValue = 36,
-        defaultValue = plantType.transplantingFrequency,
-        valueChangeListener = {/*todo*/ })
+        defaultValue = plantType.care.transplantingFrequency ?: 0,
+        valueChangeListener = { value ->
+            value?.let {
+                onCareChanged(plantType.care.copy(transplantingFrequency = it))
+            }
+        })
     IntervalSlider(
         name = "Bathing",
         units = "months",
         minValue = 6,
         maxValue = 36,
-        defaultValue = plantType.bathingFrequency,
-        valueChangeListener = {/*todo*/ })
+        defaultValue = plantType.care.bathingFrequency ?: 0,
+        valueChangeListener =  { value ->
+            value?.let {
+                onCareChanged(plantType.care.copy(bathingFrequency = it))
+            }
+        })
 
     Box(
         modifier = Modifier

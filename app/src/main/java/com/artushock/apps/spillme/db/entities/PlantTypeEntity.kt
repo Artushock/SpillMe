@@ -11,4 +11,17 @@ data class PlantTypeEntity(
     val description: String,
     val careId: Int,
     val conditionsId: Int,
-)
+) {
+    constructor(
+        name: String,
+        description: String,
+        careId: Int,
+        conditionsId: Int,
+    ) : this(
+        id = 0,
+        name = name,
+        description = description,
+        careId = careId,
+        conditionsId = conditionsId,
+    )
+}
