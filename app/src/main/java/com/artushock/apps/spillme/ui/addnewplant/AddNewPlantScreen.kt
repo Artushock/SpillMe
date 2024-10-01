@@ -28,11 +28,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,13 +47,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.repositories.models.PlantLocation
-import com.artushock.apps.spillme.repositories.models.PlantModel
 import com.artushock.apps.spillme.repositories.models.PlantType
+import com.artushock.apps.spillme.ui.addnewplant.addplanttype.Progress
+import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.UiState
+import com.artushock.apps.spillme.ui.addnewplant.models.PlantUIModel
 import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.theme.MainBrown
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -63,21 +67,15 @@ fun AddNewPlantScreen(
     viewModel: AddNewPlantViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val state by viewModel.plantTypeState.collectAsState()
 
-    var txtPlantName by rememberSaveable { mutableStateOf("") }
-    var txtPlantDescription by rememberSaveable { mutableStateOf("") }
-
-    val dateTime = DateTime.now()
-    var selectedDate by remember {
-        mutableLongStateOf(dateTime.millis)
+    val exit = viewModel.exitChannel.receiveAsFlow()
+    LaunchedEffect(1) {
+        exit.collectLatest {
+            Toast.makeText(context, "Added new plant", Toast.LENGTH_SHORT).show()
+            navController.popBackStack()
+        }
     }
-
-    val plantTypeOptions = getPlantTypes()
-    var selectedPlantType by remember { mutableStateOf(plantTypeOptions[0]) }
-
-    val locationOptions = getPlantLocations()
-    var selectedLocation by remember { mutableStateOf(locationOptions[0]) }
-
 
     Box(
         modifier = Modifier
@@ -90,59 +88,37 @@ fun AddNewPlantScreen(
                 .align(Alignment.TopCenter)
         ) {
 
-            Image(painter = painterResource(id = R.drawable.add_photo_128),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clickable {
-                        Toast
-                            .makeText(context, "Add image", Toast.LENGTH_SHORT)
-                            .show()
-                    })
+            when (state) {
+                UiState.Loading -> {
+                    Progress()
+                }
 
-            EditTextField(labelText = "Name",
-                value = txtPlantName,
-                isError = false,
-                onValueChanged = { txtPlantName = it })
+                is UiState.Success -> {
+                    val plantUiModel: PlantUIModel = (state as UiState.Success<PlantUIModel>).data
+                    AddNewPlantScreenSuccess(
+                        plantUiModel = plantUiModel,
+                        onNameChanged = viewModel::nameChanged,
+                        onDescriptionChanged = viewModel::descriptionChanged,
+                        onDateTimeChanged = viewModel::dateTimeChanged,
+                        onPlantTypeChanged = viewModel::plantTypeChanged,
+                        onNavigateToAddNewPlantType = { navController.navigate("addNewPlantType") },
+                        onPlantLocationChanged = viewModel::plantLocationChanged,
+                        onNavigateToAddNewPlantLocation = {/*TODO (Navigate to add new location)*/ },
+                    )
+                }
 
-            EditTextField(labelText = "Description",
-                value = txtPlantDescription,
-                isError = false,
-                onValueChanged = { txtPlantDescription = it })
-
-            DatePickerEditView(selectedDate) {
-                selectedDate = it
-            }
-
-            DropDownEditText(navController, "Plant type", plantTypeOptions, selectedPlantType) {
-                selectedPlantType = it
-            }
-
-            DropDownEditText(navController, "Location", locationOptions, selectedLocation) {
-                selectedLocation = it
+                is UiState.Error -> {
+                    TODO()
+                }
             }
         }
 
         Button(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp), onClick = {
-                viewModel.addPlant(
-                    PlantModel(
-                        id = 0,
-                        name = txtPlantName,
-                        description = txtPlantDescription,
-                        plantDate = DateTime(selectedDate),
-                        plantType = selectedPlantType,
-                        location = selectedLocation,
-                    )
-                ).invokeOnCompletion {
-                    Toast.makeText(context, "Added new plant $txtPlantName", Toast.LENGTH_SHORT)
-                        .show()
-                    navController.navigateUp()
-                }
-            }, colors = getButtonColors()
+                .padding(16.dp),
+            onClick = viewModel::addPlant,
+            colors = getButtonColors()
         ) {
             IconPlus(20)
             Text(text = "ADD", fontSize = 16.sp, modifier = Modifier.padding(8.dp))
@@ -152,46 +128,71 @@ fun AddNewPlantScreen(
 
 }
 
-fun getPlantLocations(): List<PlantLocation> = listOf(
-    PlantLocation(
-        id = 1,
-        name = "Location #1",
-        description = "Description of Location #1",
-    ),
-    PlantLocation(
-        id = 2,
-        name = "Location #2",
-        description = "Description of Location #2",
-    ),
-    PlantLocation(
-        id = 3,
-        name = "Location #3",
-        description = "Description of Location #3",
+@Composable
+private fun AddNewPlantScreenSuccess(
+    plantUiModel: PlantUIModel,
+    onNameChanged: (String) -> Unit,
+    onDescriptionChanged: (String) -> Unit,
+    onDateTimeChanged: (Long) -> Unit,
+    onPlantTypeChanged: (PlantType) -> Unit,
+    onNavigateToAddNewPlantType: () -> Unit,
+    onPlantLocationChanged: (PlantLocation) -> Unit,
+    onNavigateToAddNewPlantLocation: () -> Unit,
+) {
+    var uiState by remember { mutableStateOf(plantUiModel) }
+
+    Image(painter = painterResource(id = R.drawable.add_photo_128),
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .clickable {
+                // todo (Click on image button)
+            })
+
+    EditTextField(labelText = "Name",
+        value = uiState.name,
+        isError = plantUiModel.nameError,
+        onValueChanged = { name ->
+            uiState = uiState.copy(name = name)
+            onNameChanged(name)
+        })
+
+    EditTextField(labelText = "Description",
+        value = uiState.description,
+        isError = plantUiModel.descriptionError,
+        onValueChanged = { description ->
+            uiState = uiState.copy(description = description)
+            onDescriptionChanged(description)
+        })
+
+    DatePickerEditView(uiState.dateTime.millis) { timestamp ->
+        uiState = uiState.copy(dateTime = DateTime(timestamp))
+        onDateTimeChanged(timestamp)
+    }
+
+    DropDownEditText(
+        labelText = "Plant type",
+        options = uiState.plantTypeList,
+        selectedItem = uiState.selectedPlantType,
+        onChangeSelectionOption = { plantType ->
+            uiState = uiState.copy(selectedPlantType = plantType)
+            onPlantTypeChanged(plantType)
+        },
+        navigateToAdd = onNavigateToAddNewPlantType,
     )
-)
 
-
-fun getPlantTypes(): List<PlantType> = listOf(
-    PlantType(
-        id = 1,
-        name = "Plant #1",
-        type = 1,
-        description = "Description of Plant #1",
-    ),
-    PlantType(
-        id = 2,
-        name = "Plant #2",
-        type = 1,
-        description = "Description of Plant #2",
-    ),
-    PlantType(
-        id = 3,
-        name = "Plant #3",
-        type = 1,
-        description = "Description of Plant #3",
+    DropDownEditText(
+        labelText = "Location",
+        options = uiState.locationList,
+        selectedItem = uiState.selectedLocation,
+        onChangeSelectionOption = { location ->
+            uiState = uiState.copy(selectedLocation = location)
+            onPlantLocationChanged(location)
+        },
+        navigateToAdd = onNavigateToAddNewPlantLocation,
     )
-)
-
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -252,13 +253,14 @@ private fun DatePickerEditView(selectedDate: Long, onPlantingDateChanged: (Long)
 
 @Composable
 fun <T> DropDownEditText(
-    navController: NavHostController,
     labelText: String,
     options: List<T>,
-    selectedItem: T,
+    selectedItem: T?,
     onChangeSelectionOption: (T) -> Unit,
+    navigateToAdd: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val isEnabled = options.isNotEmpty() && selectedItem != null
 
     val icon = if (expanded) Icons.Filled.KeyboardArrowUp
     else Icons.Filled.KeyboardArrowDown
@@ -273,12 +275,13 @@ fun <T> DropDownEditText(
             verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
-                value = selectedItem.toString(),
+                value = if (isEnabled) selectedItem.toString() else "",
                 onValueChange = { expanded = true },
                 label = { Text(labelText) },
                 modifier = Modifier
                     .weight(1.0F)
                     .padding(0.dp, 0.dp, 16.dp, 0.dp),
+                enabled = isEnabled,
                 trailingIcon = {
                     Icon(imageVector = icon,
                         contentDescription = "contentDescription",
@@ -289,7 +292,7 @@ fun <T> DropDownEditText(
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp)
             )
 
-            IconButton(onClick = { navController.navigate("addNewPlantType") }) {
+            IconButton(onClick = { navigateToAdd.invoke() }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_add_button_48),
                     contentDescription = null
