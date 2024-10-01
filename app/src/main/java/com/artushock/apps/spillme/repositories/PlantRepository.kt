@@ -13,6 +13,7 @@ import com.artushock.apps.spillme.db.entities.FertilizerEntity
 import com.artushock.apps.spillme.db.entities.PlantEntity
 import com.artushock.apps.spillme.db.entities.PlantTypeEntity
 import com.artushock.apps.spillme.repositories.models.PlantModel
+import com.artushock.apps.spillme.repositories.models.PlantType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class PlantRepository @Inject constructor(
     private val fertilizerCareJoinDao: FertilizerCareJoinDao,
     private val conditionsDao: ConditionsDao,
     private val plantTypeDao: PlantTypeDao,
-    ) {
+) {
 
     fun getAllPlants(): Flow<List<PlantModel>> = plantDao.selectAll()
         .map { entities -> entities.map { PlantModel(it) } }
@@ -44,7 +45,13 @@ class PlantRepository @Inject constructor(
     suspend fun addCare(careEntity: CareFrequencyEntity) =
         careFrequencyDao.insertReplaceId(careEntity)
 
-    suspend fun addConditions(conditionsEntity: ConditionsEntity) = conditionsDao.insertReplaceId(conditionsEntity)
+    suspend fun addConditions(conditionsEntity: ConditionsEntity) =
+        conditionsDao.insertReplaceId(conditionsEntity)
 
-    suspend fun addPlantType(plantTypeEntity: PlantTypeEntity) = plantTypeDao.insertReplaceId(plantTypeEntity)
+    suspend fun addPlantType(plantTypeEntity: PlantTypeEntity) =
+        plantTypeDao.insertReplaceId(plantTypeEntity)
+
+    suspend fun getPlantTypes(): List<PlantType> = plantTypeDao.selectAll().map { entity ->
+        PlantType(entity)
+    }
 }

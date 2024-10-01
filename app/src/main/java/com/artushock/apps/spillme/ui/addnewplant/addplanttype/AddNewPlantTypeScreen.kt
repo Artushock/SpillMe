@@ -234,11 +234,13 @@ fun FirstStep(
 
 @Composable
 fun Progress() {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         CircularProgressIndicator(
             modifier = Modifier
-                .width(64.dp)
-                .align(Alignment.Center),
+                .width(64.dp),
             color = MaterialTheme.colorScheme.secondary,
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
