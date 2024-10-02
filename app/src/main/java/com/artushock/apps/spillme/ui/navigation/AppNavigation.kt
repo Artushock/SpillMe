@@ -1,11 +1,9 @@
 package com.artushock.apps.spillme.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.artushock.apps.spillme.ui.addnewplant.AddNewPlantScreen
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.AddNewPlantTypeScreen
 import com.artushock.apps.spillme.ui.base.AppBarPage
@@ -35,19 +33,6 @@ fun AppNavigation() {
                 AddNewPlantTypeScreen(
                     navController = navController
                 )
-            }
-        }
-        composable("frequencyOfCare",
-            arguments = listOf(
-                navArgument("plant_type_name") {
-                    NavType.StringType
-                },
-                navArgument("plantType_description") {
-                    NavType.StringType
-                }
-            )) {
-            AppBarPage(title = "Frequency of care", navController = navController) {
-//                FrequencyOfCareScreen(navController = navController)
             }
         }
     }

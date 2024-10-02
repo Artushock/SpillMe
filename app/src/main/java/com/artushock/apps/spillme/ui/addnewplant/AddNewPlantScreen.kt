@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.artushock.apps.spillme.R
@@ -60,6 +61,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+
 
 @Composable
 fun AddNewPlantScreen(
@@ -140,15 +142,33 @@ private fun AddNewPlantScreenSuccess(
     onNavigateToAddNewPlantLocation: () -> Unit,
 ) {
     var uiState by remember { mutableStateOf(plantUiModel) }
+    var openDialog by remember { mutableStateOf(false) }
 
     Image(painter = painterResource(id = R.drawable.add_photo_128),
         contentDescription = null,
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable {
-                // todo (Click on image button)
-            })
+            .clickable { openDialog = true })
+
+    if (openDialog) {
+        Dialog(onDismissRequest = { openDialog = false }) {
+            Column {
+                Button(
+                    onClick = { openDialog = false },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = "Select from gallery")
+                }
+                Button(
+                    onClick = { openDialog = false },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Take a picture")
+                }
+            }
+        }
+    }
 
     EditTextField(labelText = "Name",
         value = uiState.name,
