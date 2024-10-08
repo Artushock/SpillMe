@@ -1,5 +1,6 @@
 package com.artushock.apps.spillme.ui.addnewplant
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artushock.apps.spillme.db.entities.PlantEntity
@@ -64,6 +65,7 @@ class AddNewPlantViewModel @Inject constructor(
             plantDate = plantModel.dateTime,
             plantType = plantModel.selectedPlantType,
             location = plantModel.selectedLocation,
+            photo = plantModel.image
         )
         plantRepository.addPlant(PlantEntity(plantModel))
     }.invokeOnCompletion { exit() }
@@ -90,5 +92,9 @@ class AddNewPlantViewModel @Inject constructor(
 
     private fun exit() {
         viewModelScope.launch { _exitChannel.send(Unit) }
+    }
+
+    fun imageUriChanged(uri: Uri) {
+        plantModel = plantModel.copy(image = uri.toString())
     }
 }

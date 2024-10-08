@@ -1,6 +1,12 @@
 package com.artushock.apps.spillme.ui.addnewplant
 
+import android.Manifest
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +16,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -36,15 +44,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.repositories.models.PlantLocation
 import com.artushock.apps.spillme.repositories.models.PlantType
@@ -56,10 +69,16 @@ import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.theme.MainBrown
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.io.File
+
 
 @Composable
 fun AddNewPlantScreen(
@@ -96,6 +115,7 @@ fun AddNewPlantScreen(
                 is UiState.Success -> {
                     val plantUiModel: PlantUIModel = (state as UiState.Success<PlantUIModel>).data
                     AddNewPlantScreenSuccess(
+                        context,
                         plantUiModel = plantUiModel,
                         onNameChanged = viewModel::nameChanged,
                         onDescriptionChanged = viewModel::descriptionChanged,
@@ -104,6 +124,7 @@ fun AddNewPlantScreen(
                         onNavigateToAddNewPlantType = { navController.navigate("addNewPlantType") },
                         onPlantLocationChanged = viewModel::plantLocationChanged,
                         onNavigateToAddNewPlantLocation = {/*TODO (Navigate to add new location)*/ },
+                        onImageUriChanged = viewModel::imageUriChanged
                     )
                 }
 
@@ -128,8 +149,10 @@ fun AddNewPlantScreen(
 
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun AddNewPlantScreenSuccess(
+    context: Context,
     plantUiModel: PlantUIModel,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
@@ -138,17 +161,99 @@ private fun AddNewPlantScreenSuccess(
     onNavigateToAddNewPlantType: () -> Unit,
     onPlantLocationChanged: (PlantLocation) -> Unit,
     onNavigateToAddNewPlantLocation: () -> Unit,
+    onImageUriChanged: (Uri) -> Unit,
 ) {
     var uiState by remember { mutableStateOf(plantUiModel) }
+    var openDialog by remember { mutableStateOf(false) }
 
-    Image(painter = painterResource(id = R.drawable.add_photo_128),
-        contentDescription = null,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clickable {
-                // todo (Click on image button)
-            })
+    var permissionsGranted by remember { mutableStateOf(false) }
+
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted -> permissionsGranted = isGranted }
+
+    LaunchedEffect(cameraPermissionState) {
+        if (!cameraPermissionState.status.isGranted && cameraPermissionState.status.shouldShowRationale) {
+            // Show rationale if needed
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val imagePickerLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                imageUri = it
+                onImageUriChanged(it)
+            }
+
+        }
+
+    var tempUri by remember { mutableStateOf<Uri?>(null) }
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) {
+        tempUri?.let {
+            imageUri = it
+            onImageUriChanged(it)
+        }
+    }
+
+    val imageModifier = Modifier
+        .size(160.dp)
+        .padding(16.dp)
+        .clip(CircleShape)
+        .clickable { openDialog = true }
+
+
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        if (imageUri != null) {
+            Image(
+                painter = rememberAsyncImagePainter(model = imageUri),
+                contentDescription = null,
+                modifier = imageModifier,
+                contentScale = ContentScale.Crop
+            )
+        } else
+            Image(
+                painter = painterResource(id = R.drawable.add_photo_128),
+                contentDescription = null,
+                modifier = imageModifier,
+                contentScale = ContentScale.Crop
+            )
+    }
+
+    if (openDialog) {
+        Dialog(onDismissRequest = { openDialog = false }) {
+            Column {
+                Button(
+                    onClick = {
+                        imagePickerLauncher.launch("image/*")
+                        openDialog = false
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = "Select from gallery")
+                }
+                Button(
+                    onClick = {
+                        if (permissionsGranted) {
+                            tempUri = createUriForPhoto(context)
+                            tempUri?.let(takePictureLauncher::launch)
+                        }
+                        openDialog = false
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = permissionsGranted
+                ) {
+                    Text(text = "Take a picture")
+                }
+            }
+        }
+    }
 
     EditTextField(labelText = "Name",
         value = uiState.name,
@@ -192,6 +297,12 @@ private fun AddNewPlantScreenSuccess(
         },
         navigateToAdd = onNavigateToAddNewPlantLocation,
     )
+}
+
+fun createUriForPhoto(context: Context): Uri? {
+    val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    val imageFile = File.createTempFile("SpillMePhoto_${DateTime.now().millis}", ".jpg", storageDir)
+    return FileProvider.getUriForFile(context, "${context.packageName}.provider", imageFile)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

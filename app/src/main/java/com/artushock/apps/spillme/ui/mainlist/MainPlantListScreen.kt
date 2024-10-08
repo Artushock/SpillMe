@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -23,15 +24,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.ui.mainlist.models.MainListPlantModel
 import com.artushock.apps.spillme.ui.theme.MainBeige
@@ -84,9 +87,11 @@ fun PlantItem(plant: MainListPlantModel) {
                 .height(2.dp)
                 .background(MainBrown)
         )
-        AsyncImage(
-            model = plant.photo,
+        Image(
+            painter = rememberAsyncImagePainter(plant.photo?.toUri()),
             contentDescription = "Plant photo",
+            modifier = Modifier.size(180.dp),
+            contentScale = ContentScale.Crop
         )
         Box(
             modifier = Modifier

@@ -13,6 +13,7 @@ data class PlantEntity(
     val plantDate: Long,
     val plantTypeId: Int?,
     val plantLocationId: Int?,
+    val photoUri: String? = null,
 ) {
     constructor(plantModel: PlantModel) : this(
         id = plantModel.id,
@@ -21,5 +22,6 @@ data class PlantEntity(
         plantDate = plantModel.plantDate.millis,
         plantTypeId = plantModel.plantType?.id,
         plantLocationId = plantModel.location?.id,
+        photoUri = plantModel.photo,
     )
 }
