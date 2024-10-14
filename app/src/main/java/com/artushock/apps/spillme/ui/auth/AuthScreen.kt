@@ -18,7 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +43,7 @@ fun AuthScreen(
 
     val exit = viewModel.signInChannel.receiveAsFlow()
     LaunchedEffect(1) {
+        viewModel.init()
         exit.collectLatest {
             navController.navigate("mainListScreen")
         }
@@ -64,8 +65,8 @@ private fun AuthScreenSuccess(
     onSignInClicked: () -> Unit,
 ) {
 
-    var txtLogin by rememberSaveable { mutableStateOf(model.email) }
-    var txtPassword by rememberSaveable { mutableStateOf(model.password) }
+    var txtLogin by remember { mutableStateOf(model.email) }
+    var txtPassword by remember { mutableStateOf(model.password) }
 
     Column(
         modifier = Modifier

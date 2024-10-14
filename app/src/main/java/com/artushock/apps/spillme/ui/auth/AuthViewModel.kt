@@ -28,8 +28,12 @@ class AuthViewModel @Inject constructor(
     private val _signInChannel = Channel<Unit>()
     val signInChannel: ReceiveChannel<Unit> get() = _signInChannel
 
+    fun init(){
+        _authResultState.update { model }
+    }
+
     fun signIn() {
-        loading()
+        loading(true)
         if (emailValid() && passwordValid()){
             remoteSignIn()
         } else {
@@ -48,11 +52,14 @@ class AuthViewModel @Inject constructor(
                     _authResultState.value = model.copy(signInError = auth.authData.message)
                 }
             }
+            loading(false)
         }
     }
 
-    private fun loading() {
-        _authResultState.value = model.copy(isProgress = true)
+    private fun loading(isProgress: Boolean) {
+        _authResultState.value = model
+            .copy(isProgress = isProgress)
+        if (!isProgress) passwordChanged("")
     }
 
     fun emailChanged(email: String) {
