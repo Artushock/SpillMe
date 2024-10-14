@@ -7,9 +7,11 @@ import com.artushock.apps.spillme.db.dao.FertilizerCareJoinDao
 import com.artushock.apps.spillme.db.dao.FertilizerDao
 import com.artushock.apps.spillme.db.dao.PlantDao
 import com.artushock.apps.spillme.db.dao.PlantTypeDao
-import com.artushock.apps.spillme.repositories.PlantRepository
 import com.artushock.apps.spillme.repositories.AuthRepository
 import com.artushock.apps.spillme.repositories.AuthRepositoryImpl
+import com.artushock.apps.spillme.repositories.PlantRepository
+import com.artushock.apps.spillme.repositories.PrefsRepository
+import com.artushock.apps.spillme.repositories.PrefsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -40,6 +42,8 @@ class RepositoryModule {
             plantTypeDao,
         )
     }
+
+
 }
 
 @InstallIn(SingletonComponent::class)
@@ -47,4 +51,7 @@ class RepositoryModule {
 interface RepositoryBindModule {
     @Binds
     fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    fun bindPrefsRepository(impl: PrefsRepositoryImpl): PrefsRepository
 }
