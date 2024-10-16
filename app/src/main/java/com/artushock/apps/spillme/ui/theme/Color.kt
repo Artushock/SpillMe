@@ -11,5 +11,6 @@ import androidx.compose.ui.graphics.Color
 //val Pink40 = Color(0xFF7D5260)
 
 val MainGreen = Color(0xFF7FB500)
+val MainDisabledGreen = Color(0x327FB500)
 val MainBeige = Color(0xFFFFF6E6)
 val MainBrown = Color(0xFFB57600)

@@ -6,17 +6,27 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.artushock.apps.spillme.ui.addnewplant.AddNewPlantScreen
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.AddNewPlantTypeScreen
+import com.artushock.apps.spillme.ui.auth.AuthScreen
 import com.artushock.apps.spillme.ui.base.AppBarPage
 import com.artushock.apps.spillme.ui.mainlist.MainListScreen
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "authScreen") {
 
-    NavHost(navController = navController, startDestination = "mainListScreen") {
+        composable("authScreen")
+        {
+            AuthScreen(navController)
+        }
+
         composable("mainListScreen")
         {
-            AppBarPage(title = "Plants", navController = navController, actions = true) {
+            AppBarPage(
+                title = "Plants",
+                navController = navController,
+                navBackEnabled = false,
+                plusAction = { navController.navigate("addNewPlant") }) {
                 MainListScreen(navController = navController)
             }
         }

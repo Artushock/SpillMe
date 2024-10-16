@@ -28,7 +28,8 @@ import com.artushock.apps.spillme.ui.theme.MainGreen
 fun AppBarPage(
     title: String,
     navController: NavHostController,
-    actions: Boolean = false,
+    navBackEnabled: Boolean = true,
+    plusAction: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     Scaffold(
@@ -42,19 +43,19 @@ fun AppBarPage(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MainGreen),
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            tint = MainBeige
-                        )
+                    if (navBackEnabled) {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null,
+                                tint = MainBeige
+                            )
+                        }
                     }
                 },
                 actions = {
-                    if (actions) {
-                        IconButton(onClick = { navController.navigate("addNewPlant") }) {
-                            IconPlus()
-                        }
+                    if (plusAction != null) {
+                        IconButton(onClick = plusAction) { IconPlus() }
                     }
                 }
             )

@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artushock.apps.spillme.db.entities.PlantEntity
 import com.artushock.apps.spillme.repositories.PlantRepository
-import com.artushock.apps.spillme.repositories.models.PlantLocation
-import com.artushock.apps.spillme.repositories.models.PlantModel
-import com.artushock.apps.spillme.repositories.models.PlantType
+import com.artushock.apps.spillme.repositories.models.plants.PlantLocation
+import com.artushock.apps.spillme.repositories.models.plants.PlantModel
+import com.artushock.apps.spillme.repositories.models.plants.PlantType
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.UiState
 import com.artushock.apps.spillme.ui.addnewplant.models.PlantUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
