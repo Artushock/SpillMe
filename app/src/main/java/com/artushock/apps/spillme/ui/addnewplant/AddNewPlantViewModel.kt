@@ -1,8 +1,10 @@
 package com.artushock.apps.spillme.ui.addnewplant
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.artushock.apps.spillme.alarm.schedulePlantWateringReminder
 import com.artushock.apps.spillme.db.entities.PlantEntity
 import com.artushock.apps.spillme.repositories.PlantRepository
 import com.artushock.apps.spillme.repositories.models.plants.PlantLocation
@@ -11,17 +13,22 @@ import com.artushock.apps.spillme.repositories.models.plants.PlantType
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.model.UiState
 import com.artushock.apps.spillme.ui.addnewplant.models.PlantUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class AddNewPlantViewModel @Inject constructor(
+    @ApplicationContext
+    private val context: Context,
     private val plantRepository: PlantRepository
 ) : ViewModel() {
 
@@ -67,8 +74,24 @@ class AddNewPlantViewModel @Inject constructor(
             location = plantModel.selectedLocation,
             photo = plantModel.image
         )
-        plantRepository.addPlant(PlantEntity(plantModel))
+        val plantId = withContext(Dispatchers.IO) {
+            plantRepository.addPlant(PlantEntity(plantModel))
+        }
+        schedulePlantCare(plantModel.name, plantId)
     }.invokeOnCompletion { exit() }
+
+    private fun schedulePlantCare(plantName: String, plantId: Long) {
+        viewModelScope.launch {
+            try {
+                val care = plantRepository.getCareByPlantId(plantId.toInt())
+                care.wateringFrequency?.let { wateringFrequency ->
+                    schedulePlantWateringReminder(context, plantName, wateringFrequency)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     fun nameChanged(name: String) {
         plantModel = plantModel.copy(name = name)

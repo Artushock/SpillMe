@@ -14,6 +14,14 @@ data class CareFrequencyEntity(
     val transplantingFrequency: Int?,
     val bathingFrequency: Int?,
 ) {
+    fun toDomain() = PlantTypeCare(
+        wateringFrequency = wateringFrequency,
+        sprayingFrequency = sprayingFrequency,
+        rubbingFrequency = rubbingFrequency,
+        transplantingFrequency = transplantingFrequency,
+        bathingFrequency = bathingFrequency,
+    )
+
     constructor(plantTypeCare: PlantTypeCare) : this(
         id = 0,
         wateringFrequency = plantTypeCare.wateringFrequency,
