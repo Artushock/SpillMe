@@ -89,7 +89,8 @@ fun AddNewPlantScreen(
     val state by viewModel.plantTypeState.collectAsState()
 
     val exit = viewModel.exitChannel.receiveAsFlow()
-    LaunchedEffect(1) {
+    LaunchedEffect(Unit) {
+        viewModel.initState()
         exit.collectLatest {
             Toast.makeText(context, "Added new plant", Toast.LENGTH_SHORT).show()
             navController.popBackStack()

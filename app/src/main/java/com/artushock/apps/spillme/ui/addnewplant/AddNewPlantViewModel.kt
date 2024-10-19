@@ -40,24 +40,21 @@ class AddNewPlantViewModel @Inject constructor(
     private val _exitChannel = Channel<Unit>()
     val exitChannel: ReceiveChannel<Unit> get() = _exitChannel
 
-    init {
-        initState()
-    }
-
-    private fun initState() {
+    fun initState() {
+        _plantTypeState.value = UiState.Loading
         viewModelScope.launch {
             val plantTypeList = plantRepository.getPlantTypes()
             val locations = getLocations()
 
+            plantModel = plantModel.copy(
+                plantTypeList = plantTypeList,
+                selectedPlantType = if (plantTypeList.isNotEmpty()) plantTypeList[0] else null,
+                locationList = locations,
+                selectedLocation = if (locations.isNotEmpty()) locations[0] else null,
+            )
+
             _plantTypeState.update {
-                UiState.Success(
-                    plantModel.copy(
-                        plantTypeList = plantTypeList,
-                        selectedPlantType = if (plantTypeList.isNotEmpty()) plantTypeList[0] else null,
-                        locationList = locations,
-                        selectedLocation = if (locations.isNotEmpty()) locations[0] else null,
-                    )
-                )
+                UiState.Success(plantModel)
             }
         }
     }
