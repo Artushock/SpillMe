@@ -31,7 +31,9 @@ class PlantRepository @Inject constructor(
     fun getAllPlants(): Flow<List<PlantModel>> = plantDao.selectAll()
         .map { entities -> entities.map { PlantModel(it) } }
 
-    suspend fun addPlant(plantEntity: PlantEntity) = plantDao.insertReplace(plantEntity)
+    suspend fun addPlant(plantEntity: PlantEntity): Long {
+        return plantDao.insertReplaceId(plantEntity)
+    }
 
     suspend fun addFertilizer(fertilizerEntity: FertilizerEntity, careId: Int) {
         val fertilizerId = fertilizerDao.insertReplaceId(fertilizerEntity)
@@ -55,4 +57,7 @@ class PlantRepository @Inject constructor(
     suspend fun getPlantTypes(): List<PlantType> = plantTypeDao.selectAll().map { entity ->
         PlantType(entity)
     }
+
+    suspend fun getCareByPlantId(plantId: Int) = careFrequencyDao.selectByPlantId(plantId).toDomain()
+
 }
