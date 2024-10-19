@@ -71,6 +71,7 @@ fun MainListScreen(
             onDismiss = { isBackWasClicked = false },
             onConfirmExit = {
                 isBackWasClicked = false
+                viewModel.clearAuthData()
                 navController.popBackStack()
             },
         )

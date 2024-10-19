@@ -97,7 +97,8 @@ private fun AuthScreenSuccess(
             onValueChanged = {
                 txtPassword = it
                 onPasswordChanged(it)
-            }
+            },
+            isPassword = true
         )
 
         Button(

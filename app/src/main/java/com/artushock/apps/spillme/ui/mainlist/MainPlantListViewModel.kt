@@ -3,6 +3,7 @@ package com.artushock.apps.spillme.ui.mainlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.artushock.apps.spillme.repositories.PlantRepository
+import com.artushock.apps.spillme.repositories.PrefsRepository
 import com.artushock.apps.spillme.ui.mainlist.models.MainListPlantModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainPlantListViewModel @Inject constructor(
     private val plantRepository: PlantRepository,
+    private val prefsRepository: PrefsRepository,
 ) : ViewModel() {
 
 
@@ -43,5 +45,10 @@ class MainPlantListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun clearAuthData() {
+        prefsRepository.setPassword("")
+        prefsRepository.setLogin("")
     }
 }
