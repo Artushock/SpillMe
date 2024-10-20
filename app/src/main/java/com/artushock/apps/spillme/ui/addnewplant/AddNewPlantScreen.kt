@@ -1,9 +1,7 @@
 package com.artushock.apps.spillme.ui.addnewplant
 
 import android.Manifest
-import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -54,7 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
@@ -69,6 +67,7 @@ import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
 import com.artushock.apps.spillme.ui.theme.MainBrown
+import com.artushock.apps.spillme.utils.ImageSaveUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -77,7 +76,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import java.io.File
 
 
 @Composable
@@ -86,6 +84,7 @@ fun AddNewPlantScreen(
     viewModel: AddNewPlantViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val imageSaveUtil = ImageSaveUtil(context)
     val state by viewModel.plantTypeState.collectAsState()
 
     val exit = viewModel.exitChannel.receiveAsFlow()
@@ -116,7 +115,7 @@ fun AddNewPlantScreen(
                 is UiState.Success -> {
                     val plantUiModel: PlantUIModel = (state as UiState.Success<PlantUIModel>).data
                     AddNewPlantScreenSuccess(
-                        context,
+                        imageSaveUtil,
                         plantUiModel = plantUiModel,
                         onNameChanged = viewModel::nameChanged,
                         onDescriptionChanged = viewModel::descriptionChanged,
@@ -153,7 +152,7 @@ fun AddNewPlantScreen(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun AddNewPlantScreenSuccess(
-    context: Context,
+    imageSaveUtil: ImageSaveUtil,
     plantUiModel: PlantUIModel,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
@@ -187,8 +186,8 @@ private fun AddNewPlantScreenSuccess(
     val imagePickerLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                imageUri = it
-                onImageUriChanged(it)
+                imageUri = imageSaveUtil.saveImageToInternalStorage(it, true)?.toUri()
+                onImageUriChanged(imageUri ?: it)
             }
 
         }
@@ -198,8 +197,8 @@ private fun AddNewPlantScreenSuccess(
         contract = ActivityResultContracts.TakePicture()
     ) {
         tempUri?.let {
-            imageUri = it
-            onImageUriChanged(it)
+            imageUri = imageSaveUtil.saveImageToInternalStorage(it)?.toUri()
+            onImageUriChanged(imageUri ?: it)
         }
     }
 
@@ -242,7 +241,7 @@ private fun AddNewPlantScreenSuccess(
                 Button(
                     onClick = {
                         if (permissionsGranted) {
-                            tempUri = createUriForPhoto(context)
+                            tempUri = imageSaveUtil.createUriForPhoto()
                             tempUri?.let(takePictureLauncher::launch)
                         }
                         openDialog = false
@@ -298,12 +297,6 @@ private fun AddNewPlantScreenSuccess(
         },
         navigateToAdd = onNavigateToAddNewPlantLocation,
     )
-}
-
-fun createUriForPhoto(context: Context): Uri? {
-    val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-    val imageFile = File.createTempFile("SpillMePhoto_${DateTime.now().millis}", ".jpg", storageDir)
-    return FileProvider.getUriForFile(context, "${context.packageName}.provider", imageFile)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
