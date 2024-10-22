@@ -2,6 +2,7 @@ package com.artushock.apps.spillme.ui.mainlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.artushock.apps.spillme.db.selectors.PlantFull
 import com.artushock.apps.spillme.repositories.PlantRepository
 import com.artushock.apps.spillme.repositories.PrefsRepository
 import com.artushock.apps.spillme.ui.mainlist.models.MainListPlantModel
@@ -12,6 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
+import org.joda.time.Days
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,14 +35,16 @@ class MainPlantListViewModel @Inject constructor(
         viewModelScope.launch {
             plantRepository.getAllPlants().flowOn(Dispatchers.IO).collect { entities ->
                 _plants.update {
-                    entities.map { plantModel ->
+                    entities.map { plant: PlantFull ->
+                        val plantDate = DateTime(plant.plant.plantDate)
+                        val care  = plant.plantType?.careFrequencyEntity
                         MainListPlantModel(
-                            localId = plantModel.id,
-                            name = plantModel.name,
-                            nextWatering = 10, //todo
-                            nextFeeding = 11, //todo
-                            nextSpraying = 12, //todo
-                            photo = plantModel.photo,
+                            localId = plant.plant.id,
+                            name = plant.plant.name,
+                            nextWatering = daysUntilNext(plantDate, frequencyDays = care?.wateringFrequency),
+                            nextFeeding = daysUntilNext(plantDate, frequencyDays = care?.bathingFrequency),
+                            nextSpraying = daysUntilNext(plantDate, frequencyDays = care?.sprayingFrequency),
+                            photo = plant.plant.photoUri,
                         )
                     }
                 }
@@ -51,4 +56,14 @@ class MainPlantListViewModel @Inject constructor(
         prefsRepository.setPassword("")
         prefsRepository.setLogin("")
     }
+}
+
+fun daysUntilNext(firstDate: DateTime, frequencyDays: Int?): Int {
+    if (frequencyDays == null) return 1
+    val today = DateTime.now()
+    val daysSinceFirstWatering = Days.daysBetween(firstDate.toLocalDate(), today.toLocalDate()).days
+    val daysSinceLastWatering = daysSinceFirstWatering % frequencyDays
+    val daysUntilNextWatering = frequencyDays - daysSinceLastWatering
+
+    return if (daysUntilNextWatering == frequencyDays) 0 else daysUntilNextWatering
 }

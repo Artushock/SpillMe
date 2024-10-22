@@ -51,6 +51,7 @@ fun FrequencyOfCareScreen(
     onAddFertilizer: (Fertilizer) -> Unit,
 ) {
 
+
     var addFertilizerDialogShown by remember { mutableStateOf(false) }
 
     if (addFertilizerDialogShown) {
