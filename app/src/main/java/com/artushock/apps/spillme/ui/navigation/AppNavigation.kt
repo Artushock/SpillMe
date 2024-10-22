@@ -1,14 +1,17 @@
 package com.artushock.apps.spillme.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.artushock.apps.spillme.ui.addnewplant.AddNewPlantScreen
 import com.artushock.apps.spillme.ui.addnewplant.addplanttype.AddNewPlantTypeScreen
 import com.artushock.apps.spillme.ui.auth.AuthScreen
 import com.artushock.apps.spillme.ui.base.AppBarPage
-import com.artushock.apps.spillme.ui.mainlist.MainListScreen
+import com.artushock.apps.spillme.ui.plants.details.PlantDetails
+import com.artushock.apps.spillme.ui.plants.main.MainListScreen
 
 @Composable
 fun AppNavigation() {
@@ -43,6 +46,16 @@ fun AppNavigation() {
                 AddNewPlantTypeScreen(
                     navController = navController
                 )
+            }
+        }
+        composable(
+            route = "plants/{plantId}",
+            arguments = listOf(navArgument("plantId") { type = NavType.IntType })
+        ) { navBackStackEntry ->
+            val plantId = navBackStackEntry.arguments?.getInt("plantId")
+
+            AppBarPage(title = "Details", navController = navController) {
+                PlantDetails(plantId)
             }
         }
     }

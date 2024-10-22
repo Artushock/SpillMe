@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.mainlist.models
+package com.artushock.apps.spillme.ui.plants.main.models
 data class MainListPlantModel(
     val localId: Int,
     val name: String,

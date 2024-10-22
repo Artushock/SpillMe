@@ -1,4 +1,4 @@
-package com.artushock.apps.spillme.ui.mainlist
+package com.artushock.apps.spillme.ui.plants.main
 
 data class Plant(
     val name: String,

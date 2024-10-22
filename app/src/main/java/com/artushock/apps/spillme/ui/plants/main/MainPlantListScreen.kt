@@ -1,8 +1,9 @@
-package com.artushock.apps.spillme.ui.mainlist
+package com.artushock.apps.spillme.ui.plants.main
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.artushock.apps.spillme.R
-import com.artushock.apps.spillme.ui.mainlist.models.MainListPlantModel
+import com.artushock.apps.spillme.ui.plants.main.models.MainListPlantModel
 import com.artushock.apps.spillme.ui.theme.MainBeige
 import com.artushock.apps.spillme.ui.theme.MainBrown
 
@@ -86,20 +87,28 @@ fun MainListScreen(
         ) {
             items(
                 items = plants,
-                itemContent = { PlantItem(plant = it) }
+                itemContent = {
+                    PlantItem(plant = it) { plantId ->
+                        navController.navigate("plants/$plantId")
+                    }
+                }
             )
         }
     }
 }
 
 @Composable
-fun PlantItem(plant: MainListPlantModel) {
+fun PlantItem(
+    plant: MainListPlantModel,
+    onItemClicked: (Int) -> Unit,
+) {
     Column(
         Modifier
             .shadow(3.dp, shape = RoundedCornerShape(8.dp))
             .clip(shape = RoundedCornerShape(6.dp))
             .fillMaxSize()
             .background(MainBeige)
+            .clickable { onItemClicked(plant.localId) }
 
     ) {
         Text(

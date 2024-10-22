@@ -1,6 +1,6 @@
 package com.artushock.apps.spillme.dev
 
-import com.artushock.apps.spillme.ui.mainlist.Plant
+import com.artushock.apps.spillme.ui.plants.main.Plant
 
 class PlantsProvider {
     fun getPlants(): List<Plant> {
