@@ -45,7 +45,8 @@ class AddNewPlantTypeViewModel @Inject constructor(
     fun addFertilizer(fertilizer: Fertilizer) {
         val editFertilizers = ArrayList(plantType.fertilizers)
         editFertilizers.add(fertilizer)
-        success(plantType.copy(fertilizers = editFertilizers))
+        plantType = plantType.copy(fertilizers = editFertilizers)
+        success(plantType)
     }
 
     fun nextStep() {
@@ -123,6 +124,7 @@ class AddNewPlantTypeViewModel @Inject constructor(
         plantType = plantType.copy(
             care = care
         )
+        success(plantType)
     }
 
     private fun loading() = viewModelScope.launch {

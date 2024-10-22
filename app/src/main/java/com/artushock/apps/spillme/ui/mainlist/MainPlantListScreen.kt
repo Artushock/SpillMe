@@ -143,7 +143,7 @@ fun PlantItem(plant: MainListPlantModel) {
                     contentDescription = null
                 )
                 Text(
-                    text = "${plant.nextWatering}  days",
+                    text = "${plant.nextWatering ?: "-"}  days",
                     modifier = Modifier
                         .padding(8.dp),
                     style = TextStyle(color = MainBrown, fontSize = 11.sp),
@@ -156,7 +156,7 @@ fun PlantItem(plant: MainListPlantModel) {
                     contentDescription = null
                 )
                 Text(
-                    text = "${plant.nextFeeding} days",
+                    text = "${plant.nextFeeding ?: "-"} days",
                     modifier = Modifier
                         .padding(8.dp),
                     style = TextStyle(color = MainBrown, fontSize = 11.sp),
@@ -169,7 +169,7 @@ fun PlantItem(plant: MainListPlantModel) {
                     contentDescription = null
                 )
                 Text(
-                    text = "${plant.nextSpraying}  days",
+                    text = "${plant.nextSpraying ?: "-"}  days",
                     modifier = Modifier
                         .padding(8.dp),
                     style = TextStyle(color = MainBrown, fontSize = 11.sp),

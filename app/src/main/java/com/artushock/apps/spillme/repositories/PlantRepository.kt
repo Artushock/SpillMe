@@ -12,11 +12,9 @@ import com.artushock.apps.spillme.db.entities.FertilizerCareJoinEntity
 import com.artushock.apps.spillme.db.entities.FertilizerEntity
 import com.artushock.apps.spillme.db.entities.PlantEntity
 import com.artushock.apps.spillme.db.entities.PlantTypeEntity
-import com.artushock.apps.spillme.repositories.models.plants.PlantModel
+import com.artushock.apps.spillme.db.selectors.PlantFull
 import com.artushock.apps.spillme.repositories.models.plants.PlantType
-
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PlantRepository @Inject constructor(
@@ -28,8 +26,7 @@ class PlantRepository @Inject constructor(
     private val plantTypeDao: PlantTypeDao,
 ) {
 
-    fun getAllPlants(): Flow<List<PlantModel>> = plantDao.selectAll()
-        .map { entities -> entities.map { PlantModel(it) } }
+    fun getAllPlants(): Flow<List<PlantFull>> = plantDao.selectAll()
 
     suspend fun addPlant(plantEntity: PlantEntity): Long {
         return plantDao.insertReplaceId(plantEntity)
@@ -58,6 +55,7 @@ class PlantRepository @Inject constructor(
         PlantType(entity)
     }
 
-    suspend fun getCareByPlantId(plantId: Int) = careFrequencyDao.selectByPlantId(plantId).toDomain()
+    suspend fun getCareByPlantId(plantId: Int) =
+        careFrequencyDao.selectByPlantId(plantId).toDomain()
 
 }
