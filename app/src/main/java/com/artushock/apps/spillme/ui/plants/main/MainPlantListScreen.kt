@@ -48,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.artushock.apps.spillme.R
+import com.artushock.apps.spillme.ui.navigation.Routes
 import com.artushock.apps.spillme.ui.plants.main.models.MainListPlantModel
 import com.artushock.apps.spillme.ui.theme.MainBeige
 import com.artushock.apps.spillme.ui.theme.MainBrown
@@ -89,7 +90,7 @@ fun MainListScreen(
                 items = plants,
                 itemContent = {
                     PlantItem(plant = it) { plantId ->
-                        navController.navigate("plants/$plantId")
+                        navController.navigate(Routes.getPlantDetailsRoute(plantId))
                     }
                 }
             )

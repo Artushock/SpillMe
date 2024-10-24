@@ -31,6 +31,7 @@ import com.artushock.apps.spillme.R
 import com.artushock.apps.spillme.ui.auth.models.AuthScreenStateModel
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
+import com.artushock.apps.spillme.ui.navigation.Routes.PLANTS_ROUTE
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -45,7 +46,7 @@ fun AuthScreen(
     LaunchedEffect(1) {
         viewModel.init()
         exit.collectLatest {
-            navController.navigate("mainListScreen")
+            navController.navigate(PLANTS_ROUTE)
         }
     }
 

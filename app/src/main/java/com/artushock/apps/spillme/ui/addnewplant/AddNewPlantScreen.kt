@@ -66,6 +66,7 @@ import com.artushock.apps.spillme.ui.base.IconPlus
 import com.artushock.apps.spillme.ui.base.colors.getButtonColors
 import com.artushock.apps.spillme.ui.base.colors.getTextFieldColors
 import com.artushock.apps.spillme.ui.base.edittext.EditTextField
+import com.artushock.apps.spillme.ui.navigation.Routes.ADD_PLANT_TYPE_ROUTE
 import com.artushock.apps.spillme.ui.theme.MainBrown
 import com.artushock.apps.spillme.utils.ImageSaveUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -121,7 +122,7 @@ fun AddNewPlantScreen(
                         onDescriptionChanged = viewModel::descriptionChanged,
                         onDateTimeChanged = viewModel::dateTimeChanged,
                         onPlantTypeChanged = viewModel::plantTypeChanged,
-                        onNavigateToAddNewPlantType = { navController.navigate("addNewPlantType") },
+                        onNavigateToAddNewPlantType = { navController.navigate(ADD_PLANT_TYPE_ROUTE) },
                         onPlantLocationChanged = viewModel::plantLocationChanged,
                         onNavigateToAddNewPlantLocation = {/*TODO (Navigate to add new location)*/ },
                         onImageUriChanged = viewModel::imageUriChanged
